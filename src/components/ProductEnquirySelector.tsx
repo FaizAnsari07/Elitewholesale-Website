@@ -8,16 +8,18 @@ import type { ProductVariation } from "@/lib/wordpress";
 export function QuantityStepper({
   value,
   onChange,
+  min = 0,
 }: {
   value: number;
   onChange: (next: number) => void;
+  min?: number;
 }) {
   return (
     <div className="flex items-center rounded-md border border-black/15">
       <button
         type="button"
         aria-label="Decrease quantity"
-        onClick={() => onChange(Math.max(1, value - 1))}
+        onClick={() => onChange(Math.max(min, value - 1))}
         className="flex h-8 w-8 items-center justify-center text-lg font-semibold text-ink hover:bg-cream"
       >
         &minus;
@@ -32,6 +34,24 @@ export function QuantityStepper({
         +
       </button>
     </div>
+  );
+}
+
+function ViewCartLink({ count }: { count: number }) {
+  return (
+    <Link
+      href="/enquiry"
+      className="inline-flex items-center gap-2 rounded-md border border-brand px-4 py-2 text-sm font-semibold text-brand transition hover:bg-brand hover:text-white"
+    >
+      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={1.75}>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 1.914-4.5 2.436-6.75H5.106M7.5 14.25L5.106 5.25M9.75 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm9 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
+        />
+      </svg>
+      View Cart ({count})
+    </Link>
   );
 }
 
@@ -60,31 +80,38 @@ export default function ProductEnquirySelector({
   const [added, setAdded] = useState<Set<string>>(new Set());
 
   function getQty(id: string) {
-    return quantities[id] ?? 1;
+    return quantities[id] ?? 0;
   }
 
   function handleAdd(variation: ProductVariation) {
+    const qty = getQty(variation.id);
+    if (qty <= 0) return;
     addItem({
       productSlug,
       productName,
       variationId: variation.id,
       variationLabel: variationLabel(variation),
       image: variation.image?.sourceUrl ?? image,
-      quantity: getQty(variation.id),
+      quantity: qty,
     });
     setAdded((prev) => new Set(prev).add(variation.id));
+    setQuantities((prev) => ({ ...prev, [variation.id]: 0 }));
   }
 
   if (variations.length === 0) return null;
 
   return (
     <div className="mt-6">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
-        Available Flavors / Options
-      </h2>
-      <ul className="mt-3 divide-y divide-black/10 rounded-lg border border-black/10">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
+          Available Flavors / Options
+        </h2>
+        <ViewCartLink count={totalCount} />
+      </div>
+      <ul className="mt-3 max-h-96 divide-y divide-black/10 overflow-y-auto rounded-lg border border-black/10">
         {variations.map((v) => {
           const outOfStock = v.stockStatus === "OUT_OF_STOCK";
+          const qty = getQty(v.id);
           return (
             <li key={v.id} className="flex flex-wrap items-center justify-between gap-3 p-3">
               <div className="min-w-0">
@@ -99,12 +126,12 @@ export default function ProductEnquirySelector({
               </div>
               <div className="flex items-center gap-3">
                 <QuantityStepper
-                  value={getQty(v.id)}
+                  value={qty}
                   onChange={(next) => setQuantities((prev) => ({ ...prev, [v.id]: next }))}
                 />
                 <button
                   type="button"
-                  disabled={outOfStock}
+                  disabled={outOfStock || qty <= 0}
                   onClick={() => handleAdd(v)}
                   className="rounded-md bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
                 >
@@ -115,15 +142,6 @@ export default function ProductEnquirySelector({
           );
         })}
       </ul>
-
-      {totalCount > 0 && (
-        <Link
-          href="/enquiry"
-          className="mt-4 inline-block rounded-md border border-brand px-4 py-2 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
-        >
-          View Selected ({totalCount})
-        </Link>
-      )}
     </div>
   );
 }
@@ -140,7 +158,7 @@ export function SimpleProductEnquiryButton({
   outOfStock: boolean;
 }) {
   const { addItem, totalCount } = useEnquiryCart();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [added, setAdded] = useState(false);
 
   return (
@@ -148,23 +166,17 @@ export function SimpleProductEnquiryButton({
       <QuantityStepper value={quantity} onChange={setQuantity} />
       <button
         type="button"
-        disabled={outOfStock}
+        disabled={outOfStock || quantity <= 0}
         onClick={() => {
           addItem({ productSlug, productName, image, quantity });
           setAdded(true);
+          setQuantity(0);
         }}
         className="rounded-md bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
       >
         {added ? "Added to Enquiry" : "Add to Enquiry"}
       </button>
-      {totalCount > 0 && (
-        <Link
-          href="/enquiry"
-          className="rounded-md border border-brand px-4 py-2.5 text-sm font-semibold text-brand hover:bg-brand hover:text-white"
-        >
-          View Selected ({totalCount})
-        </Link>
-      )}
+      <ViewCartLink count={totalCount} />
     </div>
   );
 }

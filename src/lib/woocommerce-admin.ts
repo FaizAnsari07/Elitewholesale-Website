@@ -155,26 +155,3 @@ export function deleteBrand(id: number) {
   });
 }
 
-// ---- Pages (core WP REST) ----
-
-export type WpPage = {
-  id: number;
-  slug: string;
-  status: string;
-  title: { rendered: string };
-  link: string;
-  modified: string;
-};
-
-export function listPages() {
-  const url = new URL(`${baseUrl()}/wp/v2/pages`);
-  url.searchParams.set("per_page", "50");
-  url.searchParams.set("status", "any");
-  return fetch(url.toString(), {
-    headers: { Authorization: authHeader() },
-    cache: "no-store",
-  }).then(async (res) => {
-    if (!res.ok) throw new Error(`Failed to list pages: ${res.status}`);
-    return res.json() as Promise<WpPage[]>;
-  });
-}

@@ -116,17 +116,8 @@ export default function ProductForm({
       </div>
 
       <p className="text-xs text-muted">
-        Creating here makes a simple product. Variable products with multiple
-        flavors/options can be created and managed in{" "}
-        <a
-          href="http://localhost:8080/wp-admin/edit.php?post_type=product"
-          target="_blank"
-          rel="noreferrer"
-          className="font-semibold text-accent hover:underline"
-        >
-          wp-admin
-        </a>
-        .
+        This quick form creates a simple product. Products with multiple
+        flavors/options (variable products) aren&apos;t supported here yet.
       </p>
 
       <button

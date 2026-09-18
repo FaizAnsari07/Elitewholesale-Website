@@ -55,12 +55,6 @@ export default async function AdminDashboardPage() {
             </Link>
           </div>
         </div>
-
-        {products.length > 0 && (
-          <p className="mt-6 text-xs text-muted">
-            Connected to WordPress at {process.env.WORDPRESS_API_URL}
-          </p>
-        )}
       </div>
     </div>
   );

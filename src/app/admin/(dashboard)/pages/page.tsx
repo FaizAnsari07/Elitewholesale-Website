@@ -1,31 +1,39 @@
+import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
-import { listPages, type WpPage } from "@/lib/woocommerce-admin";
 
-export default async function AdminPagesPage() {
-  const pages = await listPages();
+// Page content (About, Contact, Shop, etc.) is built directly into the
+// Next.js codebase (src/app/**) rather than managed through a CMS, so this
+// is a static reference list of the real site routes -- not backed by any
+// external data source.
+type SitePage = { title: string; route: string };
 
-  const columns: DataTableColumn<WpPage>[] = [
-    { key: "title", header: "Title", render: (p) => <span className="font-semibold text-brand">{p.title.rendered}</span> },
-    { key: "slug", header: "Slug", render: (p) => <span className="text-muted">/{p.slug}</span> },
-    { key: "status", header: "Status", render: (p) => <span className="capitalize text-muted">{p.status}</span> },
+const SITE_PAGES: SitePage[] = [
+  { title: "Home", route: "/" },
+  { title: "Shop", route: "/shop" },
+  { title: "Categories", route: "/categories" },
+  { title: "Brands", route: "/brands" },
+  { title: "About Us", route: "/about-us" },
+  { title: "Contact Us", route: "/contact-us" },
+  { title: "Cart", route: "/cart" },
+  { title: "My Account", route: "/my-account" },
+  { title: "Refund & Returns Policy", route: "/refund_returns" },
+  { title: "Privacy Policy", route: "/privacy-policy" },
+  { title: "Terms & Services", route: "/terms-services" },
+  { title: "Enquiry / Cart", route: "/enquiry" },
+];
+
+export default function AdminPagesPage() {
+  const columns: DataTableColumn<SitePage>[] = [
+    { key: "title", header: "Title", render: (p) => <span className="font-semibold text-brand">{p.title}</span> },
+    { key: "route", header: "Route", render: (p) => <span className="text-muted">{p.route}</span> },
     {
       key: "actions",
       header: "Actions",
       render: (p) => (
-        <div className="flex items-center gap-3">
-          <a href={p.link} target="_blank" rel="noreferrer" className="text-sm font-semibold text-ink hover:underline">
-            View
-          </a>
-          <a
-            href={`http://localhost:8080/wp-admin/post.php?post=${p.id}&action=edit`}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-semibold text-brand hover:underline"
-          >
-            Edit in WordPress
-          </a>
-        </div>
+        <Link href={p.route} target="_blank" className="text-sm font-semibold text-ink hover:underline">
+          View Live Page
+        </Link>
       ),
     },
   ];
@@ -35,11 +43,10 @@ export default async function AdminPagesPage() {
       <AdminHeader title="Pages" />
       <div className="p-6">
         <p className="mb-4 max-w-2xl text-sm text-muted">
-          Pages are listed here for reference. Full page-content editing
-          (Elementor-style layouts) is handled in WordPress directly rather
-          than reimplemented here.
+          Page content is built directly into the site&apos;s codebase rather
+          than managed here. This is a reference list of every page.
         </p>
-        <DataTable columns={columns} rows={pages} getRowId={(p) => p.id} />
+        <DataTable columns={columns} rows={SITE_PAGES} getRowId={(p) => p.route} />
       </div>
     </div>
   );
