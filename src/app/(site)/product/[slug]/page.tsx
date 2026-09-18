@@ -2,10 +2,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProductGallery from "@/components/ProductGallery";
+import ProductCard from "@/components/ProductCard";
 import ProductEnquirySelector, {
   SimpleProductEnquiryButton,
 } from "@/components/ProductEnquirySelector";
-import { getProductBySlug } from "@/lib/wordpress";
+import { getProductBySlug, getProductsByCategory } from "@/lib/wordpress";
 import { WHOLESALE_PRICE_LABEL, isNewProduct } from "@/lib/site";
 
 export async function generateMetadata({
@@ -52,6 +53,12 @@ export default async function ProductPage({
   const isVariable = variations.length > 0;
   const inStock = product.stockStatus === "IN_STOCK";
   const isNew = isNewProduct(product.date);
+
+  const relatedProducts = categories[0]
+    ? (await getProductsByCategory(categories[0].slug))
+        .filter((p) => p.slug !== product.slug)
+        .slice(0, 8)
+    : [];
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
@@ -163,6 +170,24 @@ export default async function ProductPage({
           )}
         </div>
       </div>
+
+      {relatedProducts.length > 0 && (
+        <div className="mt-16 border-t border-black/10 pt-10">
+          <div className="flex items-center text-xs font-semibold uppercase tracking-wide text-muted">
+            <Link href="/shop" className="hover:text-accent">
+              Shop
+            </Link>
+            <Chevron />
+            <span className="text-ink">{categories[0]?.name}</span>
+          </div>
+          <h2 className="mt-2 text-2xl font-extrabold text-brand">Related Products</h2>
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

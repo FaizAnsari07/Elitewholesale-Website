@@ -37,8 +37,8 @@ export default function Footer() {
 
   return (
     <footer className="mt-16 border-t border-black/10 bg-surface text-ink">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 md:grid-cols-4 lg:px-8">
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 sm:grid-cols-2 lg:grid-cols-5 lg:px-8">
+        <div className="sm:col-span-2 lg:col-span-1">
           <Image
             src="/images/elite-wholesale-logo.png"
             alt="Elite Wholesale"
@@ -49,12 +49,29 @@ export default function Footer() {
           <p className="mt-4 text-sm leading-relaxed text-muted">
             {siteConfig.description}
           </p>
-          <Link
-            href="/about-us"
-            className="mt-4 inline-block text-sm font-semibold text-brand hover:text-accent"
-          >
-            About Us
-          </Link>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-brand">
+            Get Started
+          </h3>
+          <ul className="mt-4 space-y-2 text-sm">
+            <li>
+              <Link href="/about-us" className="hover:text-accent">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact-us" className="hover:text-accent">
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/enquiry" className="hover:text-accent">
+                Your Enquiry Cart
+              </Link>
+            </li>
+          </ul>
         </div>
 
         <div>

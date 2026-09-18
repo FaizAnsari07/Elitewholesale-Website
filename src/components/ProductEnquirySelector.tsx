@@ -77,37 +77,38 @@ export default function ProductEnquirySelector({
 }) {
   const { addItem, totalCount } = useEnquiryCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [added, setAdded] = useState<Set<string>>(new Set());
+  const [justAdded, setJustAdded] = useState(false);
 
   function getQty(id: string) {
     return quantities[id] ?? 0;
   }
 
-  function handleAdd(variation: ProductVariation) {
-    const qty = getQty(variation.id);
-    if (qty <= 0) return;
-    addItem({
-      productSlug,
-      productName,
-      variationId: variation.id,
-      variationLabel: variationLabel(variation),
-      image: variation.image?.sourceUrl ?? image,
-      quantity: qty,
-    });
-    setAdded((prev) => new Set(prev).add(variation.id));
-    setQuantities((prev) => ({ ...prev, [variation.id]: 0 }));
+  const selectedCount = variations.reduce((sum, v) => sum + getQty(v.id), 0);
+
+  function handleAddSelected() {
+    const toAdd = variations.filter((v) => getQty(v.id) > 0);
+    if (toAdd.length === 0) return;
+    for (const v of toAdd) {
+      addItem({
+        productSlug,
+        productName,
+        variationId: v.id,
+        variationLabel: variationLabel(v),
+        image: v.image?.sourceUrl ?? image,
+        quantity: getQty(v.id),
+      });
+    }
+    setQuantities({});
+    setJustAdded(true);
   }
 
   if (variations.length === 0) return null;
 
   return (
     <div className="mt-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
-          Available Flavors / Options
-        </h2>
-        <ViewCartLink count={totalCount} />
-      </div>
+      <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">
+        Available Flavors / Options
+      </h2>
       <ul className="mt-3 max-h-96 divide-y divide-black/10 overflow-y-auto rounded-lg border border-black/10">
         {variations.map((v) => {
           const outOfStock = v.stockStatus === "OUT_OF_STOCK";
@@ -124,24 +125,29 @@ export default function ProductEnquirySelector({
                   {outOfStock ? "Out of Stock" : "In Stock"}
                 </span>
               </div>
-              <div className="flex items-center gap-3">
-                <QuantityStepper
-                  value={qty}
-                  onChange={(next) => setQuantities((prev) => ({ ...prev, [v.id]: next }))}
-                />
-                <button
-                  type="button"
-                  disabled={outOfStock || qty <= 0}
-                  onClick={() => handleAdd(v)}
-                  className="rounded-md bg-brand px-4 py-2 text-xs font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {added.has(v.id) ? "Added" : "Add"}
-                </button>
-              </div>
+              <QuantityStepper
+                value={qty}
+                onChange={(next) => {
+                  setJustAdded(false);
+                  setQuantities((prev) => ({ ...prev, [v.id]: outOfStock ? 0 : next }));
+                }}
+              />
             </li>
           );
         })}
       </ul>
+
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          disabled={selectedCount <= 0}
+          onClick={handleAddSelected}
+          className="rounded-md bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {justAdded ? "Added to Enquiry" : `Add Selected${selectedCount > 0 ? ` (${selectedCount})` : ""}`}
+        </button>
+        <ViewCartLink count={totalCount} />
+      </div>
     </div>
   );
 }
