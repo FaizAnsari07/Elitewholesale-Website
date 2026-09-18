@@ -1,10 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/wordpress";
-import { WHOLESALE_PRICE_LABEL } from "@/lib/site";
+import { WHOLESALE_PRICE_LABEL, isNewProduct } from "@/lib/site";
 
 export default function ProductCard({ product }: { product: Product }) {
   const brand = product.productBrands.nodes[0]?.name;
+  const inStock = product.stockStatus === "IN_STOCK";
+  const isNew = isNewProduct(product.date);
+
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -24,11 +27,20 @@ export default function ProductCard({ product }: { product: Product }) {
             No image
           </div>
         )}
-        {product.stockStatus === "OUT_OF_STOCK" && (
-          <span className="absolute left-2 top-2 rounded bg-ink px-2 py-1 text-[10px] font-bold uppercase text-white">
-            Out of stock
+        <div className="absolute left-2 top-2 flex flex-col gap-1">
+          {isNew && (
+            <span className="rounded bg-success px-2 py-1 text-[10px] font-bold uppercase text-white">
+              New
+            </span>
+          )}
+          <span
+            className={`rounded px-2 py-1 text-[10px] font-bold uppercase text-white ${
+              inStock ? "bg-success" : "bg-ink"
+            }`}
+          >
+            {inStock ? "In Stock" : "Out of Stock"}
           </span>
-        )}
+        </div>
       </div>
       <div className="flex flex-1 flex-col gap-1 p-4">
         {brand && (

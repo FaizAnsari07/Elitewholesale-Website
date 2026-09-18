@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { Category, Brand } from "@/lib/wordpress";
 import { mainNav } from "@/lib/site";
 import SearchBox from "@/components/SearchBox";
+import EnquiryCartBadge from "@/components/EnquiryCartBadge";
 
 export default function HeaderClient({
   categories,
@@ -111,24 +112,30 @@ export default function HeaderClient({
           })}
         </nav>
 
-        <div className="hidden w-64 lg:block">
-          <SearchBox />
+        <div className="hidden items-center gap-3 lg:flex">
+          <div className="w-56">
+            <SearchBox />
+          </div>
+          <EnquiryCartBadge />
         </div>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          className="flex h-10 w-10 items-center justify-center rounded-md border border-black/10 lg:hidden"
-          onClick={() => setMobileOpen((v) => !v)}
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2}>
-            {mobileOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+        <div className="flex items-center gap-2 lg:hidden">
+          <EnquiryCartBadge />
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            className="flex h-10 w-10 items-center justify-center rounded-md border border-black/10"
+            onClick={() => setMobileOpen((v) => !v)}
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2}>
+              {mobileOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
       {mobileOpen && (

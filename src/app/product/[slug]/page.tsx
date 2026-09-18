@@ -2,8 +2,11 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import ProductGallery from "@/components/ProductGallery";
+import ProductEnquirySelector, {
+  SimpleProductEnquiryButton,
+} from "@/components/ProductEnquirySelector";
 import { getProductBySlug } from "@/lib/wordpress";
-import { WHOLESALE_PRICE_LABEL } from "@/lib/site";
+import { WHOLESALE_PRICE_LABEL, isNewProduct } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -40,8 +43,10 @@ export default async function ProductPage({
   const attributeEntries = (product.attributes?.nodes ?? []).filter(
     (a) => a.options && a.options.length > 0,
   );
-  const isVariable = Boolean(product.variations);
-  const variationCount = product.variations?.nodes.length ?? 0;
+  const variations = product.variations?.nodes ?? [];
+  const isVariable = variations.length > 0;
+  const inStock = product.stockStatus === "IN_STOCK";
+  const isNew = isNewProduct(product.date);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
@@ -68,10 +73,25 @@ export default async function ProductPage({
         <ProductGallery images={images} title={product.name} />
 
         <div>
+          <div className="flex flex-wrap items-center gap-2">
+            {isNew && (
+              <span className="rounded bg-success px-2.5 py-1 text-[10px] font-bold uppercase text-white">
+                New
+              </span>
+            )}
+            <span
+              className={`rounded px-2.5 py-1 text-[10px] font-bold uppercase text-white ${
+                inStock ? "bg-success" : "bg-ink"
+              }`}
+            >
+              {inStock ? "In Stock" : "Out of Stock"}
+            </span>
+          </div>
+
           {brands[0] && (
             <Link
               href={`/brand/${brands[0].slug}`}
-              className="text-xs font-semibold uppercase tracking-wide text-accent"
+              className="mt-3 inline-block text-xs font-semibold uppercase tracking-wide text-accent"
             >
               {brands[0].name}
             </Link>
@@ -91,18 +111,6 @@ export default async function ProductPage({
                 <dd>{product.sku}</dd>
               </div>
             )}
-            <div className="flex gap-2">
-              <dt className="font-semibold text-ink">Availability:</dt>
-              <dd
-                className={`capitalize ${
-                  product.stockStatus === "IN_STOCK" ? "text-success" : "text-accent"
-                }`}
-              >
-                {product.stockStatus === "IN_STOCK"
-                  ? "In stock"
-                  : (product.stockStatus ?? "Contact us").toLowerCase().replace(/_/g, " ")}
-              </dd>
-            </div>
             {categories.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 <dt className="font-semibold text-ink">Category:</dt>
@@ -133,19 +141,28 @@ export default async function ProductPage({
             </div>
           )}
 
-          {isVariable && variationCount > 0 && (
-            <p className="mt-4 text-sm text-muted">
-              Available in {variationCount} variations. Sign in to a
-              wholesale account to select options and pricing.
-            </p>
+          {isVariable ? (
+            <ProductEnquirySelector
+              productSlug={product.slug}
+              productName={product.name}
+              image={product.image?.sourceUrl ?? null}
+              variations={variations}
+            />
+          ) : (
+            <SimpleProductEnquiryButton
+              productSlug={product.slug}
+              productName={product.name}
+              image={product.image?.sourceUrl ?? null}
+              outOfStock={!inStock}
+            />
           )}
 
-          <div className="mt-8">
+          <div className="mt-6">
             <a
               href="/contact-us"
-              className="inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+              className="inline-block text-sm font-semibold text-accent hover:underline"
             >
-              Request Wholesale Access
+              Or contact us directly for wholesale access &rarr;
             </a>
           </div>
 

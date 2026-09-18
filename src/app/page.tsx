@@ -82,13 +82,13 @@ async function resolveProducts(slugs: string[]): Promise<Product[]> {
   return results.filter((p): p is Product => Boolean(p));
 }
 
-function ProductRailItem({ product }: { product: Product }) {
+function ProductRailItem({ product, light = false }: { product: Product; light?: boolean }) {
   return (
     <Link
       href={`/product/${product.slug}`}
       className="group flex w-36 shrink-0 flex-col items-center text-center sm:w-44"
     >
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-cream">
+      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
         {product.image && (
           <Image
             src={product.image.sourceUrl}
@@ -99,7 +99,11 @@ function ProductRailItem({ product }: { product: Product }) {
           />
         )}
       </div>
-      <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-brand">
+      <h3
+        className={`mt-3 line-clamp-2 text-sm font-semibold ${
+          light ? "text-white" : "text-neutral-900"
+        }`}
+      >
         {product.name}
       </h3>
     </Link>
@@ -259,26 +263,28 @@ export default async function Home() {
 
       {/* New Flavors: disposables */}
       {newFlavorsDisposables.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-brand">
-            New Flavors <span className="text-accent">NEW</span>
-          </h2>
-          <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
-            {newFlavorsDisposables.map((p) => (
-              <ProductRailItem key={p.id} product={p} />
-            ))}
+        <section className="bg-[#F5D93A] py-14">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-neutral-900">
+              New Flavors <span className="text-brand">NEW</span>
+            </h2>
+            <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
+              {newFlavorsDisposables.map((p) => (
+                <ProductRailItem key={p.id} product={p} light={false} />
+              ))}
+            </div>
           </div>
         </section>
       )}
 
       {/* New This Season */}
       {newThisSeason.length > 0 && (
-        <section className="bg-cream py-14">
+        <section className="bg-[#39B549] py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-brand">New This Season</h2>
+            <h2 className="text-2xl font-bold text-white">New This Season</h2>
             <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
               {newThisSeason.map((p) => (
-                <ProductRailItem key={p.id} product={p} />
+                <ProductRailItem key={p.id} product={p} light />
               ))}
             </div>
           </div>

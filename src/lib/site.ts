@@ -16,6 +16,14 @@ export const siteConfig = {
 
 export const WHOLESALE_PRICE_LABEL = "Login to view wholesale pricing";
 
+const NEW_PRODUCT_WINDOW_DAYS = 30;
+
+export function isNewProduct(dateStr: string | null | undefined): boolean {
+  if (!dateStr) return false;
+  const ageMs = Date.now() - new Date(dateStr).getTime();
+  return ageMs >= 0 && ageMs <= NEW_PRODUCT_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+}
+
 export const mainNav = [
   { label: "Home", href: "/" },
   { label: "Categories", href: "/categories" },
