@@ -115,7 +115,10 @@ echo "==> Creating a fresh local admin login"
 WP user create localadmin admin@localhost.test --role=administrator --user_pass="ChangeMe123!" || \
   WP user update localadmin --user_pass="ChangeMe123!"
 
-cat <<'EOF'
+echo "==> Generating a WooCommerce REST API application password (used by the Next.js /admin panel)"
+APP_PASSWORD=$(WP user application-password create localadmin "nextjs-admin" --porcelain)
+
+cat <<EOF
 
 ==> Done.
 
@@ -125,6 +128,13 @@ Password:   ChangeMe123!  (change this immediately after first login)
 
 WPGraphQL endpoint: http://localhost:8080/graphql
 
-Run `docker compose down` (from this directory) to stop the stack, or
-`docker compose down -v` to also wipe the database and start over.
+Add these to the project root's .env.local (see .env.example) so the
+Next.js /admin panel can write to WooCommerce:
+
+  WORDPRESS_API_URL=http://localhost:8080/wp-json
+  WORDPRESS_APP_USER=localadmin
+  WORDPRESS_APP_PASSWORD=$APP_PASSWORD
+
+Run \`docker compose down\` (from this directory) to stop the stack, or
+\`docker compose down -v\` to also wipe the database and start over.
 EOF

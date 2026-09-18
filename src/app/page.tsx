@@ -263,7 +263,7 @@ export default async function Home() {
 
       {/* New Flavors: disposables */}
       {newFlavorsDisposables.length > 0 && (
-        <section className="bg-[#F5D93A] py-14">
+        <section className="bg-[#ffff] py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900">
               New Flavors <span className="text-brand">NEW</span>
@@ -397,7 +397,7 @@ export default async function Home() {
         >
           <source src="/assets/videos/smoke.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-ink/70" />
+        <div className="absolute inset-0 bg-ink/20" />
 
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">

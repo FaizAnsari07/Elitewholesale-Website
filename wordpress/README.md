@@ -2,11 +2,19 @@
 
 This is a **local-only, headless** WordPress + WooCommerce instance restored
 from the original Elite Wholesale `.wpress` backup. It exists to give you a
-real admin panel (login, add/edit/delete products, categories, brands, media)
+real admin backend (add/edit/delete products, categories, brands, media)
 backed by the actual recovered product data. It is **not** used to render any
-public-facing pages — the Next.js app at the project root is the storefront,
-and fetches product data from this backend's [WPGraphQL](https://www.wpgraphql.com/)
-endpoint.
+public-facing pages — the Next.js app at the project root is the storefront.
+
+Two separate connections exist between the Next.js app and this backend:
+
+- **Reads** go through [WPGraphQL](https://www.wpgraphql.com/) (`/graphql`) —
+  this is what the public site uses to render products/categories/brands.
+- **Writes** (from the Next.js app's own `/admin` panel) go through the
+  **WooCommerce REST API** (`/wp-json/wc/v3/...`) instead, authenticated with
+  a WordPress Application Password. WPGraphQL doesn't support Application
+  Password authentication (that's a WordPress core REST API mechanism), so
+  mutations use REST while reads stay on GraphQL.
 
 ## What was deliberately left out
 
@@ -55,10 +63,22 @@ data is PHP-serialized JSON, and a naive replace would corrupt it), activates
 WooCommerce + Catalog Mode + WPGraphQL + ACF, and creates a local admin
 account.
 
-**Login:** `http://localhost:8080/wp-admin/` — username `localadmin`,
+**wp-admin login:** `http://localhost:8080/wp-admin/` — username `localadmin`,
 password `ChangeMe123!` (change this on first login).
 
 **GraphQL endpoint:** `http://localhost:8080/graphql`
+
+**Next.js /admin panel:** the script also prints a WooCommerce REST API
+Application Password at the end. Copy the three `WORDPRESS_API_URL` /
+`WORDPRESS_APP_USER` / `WORDPRESS_APP_PASSWORD` lines it prints into the
+project root's `.env.local`, alongside `ADMIN_USERNAME` / `ADMIN_PASSWORD` /
+`ADMIN_SESSION_SECRET` (see the root `.env.example`) to gate the panel itself.
+Then visit `http://localhost:3000/admin`.
+
+Application Passwords require either HTTPS or `wp_get_environment_type()`
+to report `'local'` (see `wp_is_application_passwords_supported()` in
+WordPress core) — that's why `docker-compose.yml` sets
+`WP_ENVIRONMENT_TYPE: local` even though this stack runs over plain HTTP.
 
 ## Day to day
 
@@ -72,9 +92,9 @@ docker compose run --rm wpcli wp <command> --allow-root   # any WP-CLI command
 ## Connecting the Next.js app
 
 The Next.js app reads `WORDPRESS_GRAPHQL_URL` (see the project root's
-`.env.local.example`) to fetch live product/category/brand data. With this
+`.env.example`) to fetch live product/category/brand data. With this
 backend running on the default port, no configuration is needed beyond
-copying `.env.local.example` to `.env.local` at the project root.
+copying `.env.example` to `.env.local` at the project root.
 
 ## Deploying for real
 

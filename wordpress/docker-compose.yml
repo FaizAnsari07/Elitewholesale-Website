@@ -38,6 +38,11 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_MEMORY_LIMIT', '512M');
         ini_set('memory_limit', '512M');
+      # Application Passwords (used by the Next.js admin panel to
+      # authenticate against the WooCommerce REST API) refuse to work
+      # without HTTPS unless WordPress considers itself a "local"
+      # environment -- see wp_is_application_passwords_supported().
+      WP_ENVIRONMENT_TYPE: local
     volumes:
       - wp_core:/var/www/html
       - ./wp-content:/var/www/html/wp-content
