@@ -148,16 +148,18 @@ export default async function Home() {
   return (
     <div>
       {/* Announcement bar */}
-      <div className="overflow-hidden bg-ink py-2.5 text-xs font-semibold text-white">
-        <div className="marquee-track flex w-max items-center gap-8">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-8 px-4">
-              <span>Disclaimer: Flavors, Quantities and Brands May Vary.</span>
-              <span className="text-Bold">&bull;</span>
-              <span>Free Delivery</span>
-              <span className="text-accent">&bull;</span>
-            </div>
-          ))}
+      <div className="overflow-hidden bg-ink py-2.5 text-xs font-semibold text-white sm:text-sm">
+        <div className="marquee-track">
+          <div className="marquee-content">
+            {[0, 1].map((copy) => (
+              <div key={copy} className="marquee-item" aria-hidden={copy === 1}>
+                <span>Disclaimer: Flavors, Quantities and Brands May Vary.</span>
+                <span className="text-accent">&bull;</span>
+                <span>Free Delivery</span>
+                <span className="text-accent">&bull;</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {/* Video hero */}

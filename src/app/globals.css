@@ -65,6 +65,37 @@ body {
 }
 
 
+.marquee-track {
+  overflow: hidden;
+  width: 100%;
+}
+
+/*
+ * Seamless marquee: the track renders the message TWICE back-to-back (see
+ * page.tsx) and animates exactly -50%, i.e. by the width of one copy. The
+ * moment the first copy has scrolled fully offscreen, the second copy is
+ * sitting exactly where the first one started, so the loop point is
+ * invisible -- no stall, no snap-back, no blank gap.
+ *
+ * (A single copy animated by -100% is a common bug here: translateX(%) is
+ * relative to the element's OWN width, not the track's, so it only ever
+ * travels its own width and stalls partway across a wider container.)
+ */
+.marquee-content {
+  display: flex;
+  width: max-content;
+  animation: marquee-rtl 25s linear infinite;
+}
+
+.marquee-item {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+  padding-inline: 2rem;
+}
+
 @keyframes marquee-rtl {
   from {
     transform: translateX(0);
@@ -75,12 +106,14 @@ body {
   }
 }
 
-.marquee-track {
-  animation: marquee-rtl 25s linear infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .marquee-track {
+  .marquee-content {
     animation: none;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .marquee-item:nth-child(n + 2) {
+    display: none;
   }
 }
