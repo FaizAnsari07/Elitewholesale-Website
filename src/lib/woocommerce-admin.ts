@@ -106,6 +106,31 @@ export function deleteProduct(id: number) {
   });
 }
 
+// Uploads a file to the WordPress media library (core REST endpoint, not
+// WooCommerce-specific) and returns the resulting attachment so its id can
+// be attached to a product's `images` field.
+export async function uploadProductImage(
+  file: File,
+): Promise<{ id: number; source_url: string }> {
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const res = await fetch(`${baseUrl()}/wp/v2/media`, {
+    method: "POST",
+    headers: {
+      Authorization: authHeader(),
+      "Content-Type": file.type || "application/octet-stream",
+      "Content-Disposition": `attachment; filename="${file.name}"`,
+    },
+    body: buffer,
+    cache: "no-store",
+  });
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!res.ok) {
+    throw new Error(data?.message || `${res.status} ${res.statusText}`);
+  }
+  return { id: data.id, source_url: data.source_url };
+}
+
 // ---- Categories ----
 
 export type WcTerm = {

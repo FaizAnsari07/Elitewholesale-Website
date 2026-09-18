@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { WcProduct, WcTerm } from "@/lib/woocommerce-admin";
 
 export default function ProductForm({
@@ -11,8 +12,36 @@ export default function ProductForm({
   categories: WcTerm[];
   submitLabel: string;
 }) {
+  const currentImage = product?.images?.[0];
+
   return (
     <form action={action} className="max-w-2xl space-y-5 rounded-xl border border-black/10 bg-white p-6">
+      <div>
+        <label className="text-xs font-semibold uppercase tracking-wide text-muted">
+          Product Image
+        </label>
+        <div className="mt-2 flex items-center gap-4">
+          <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg border border-black/10 bg-cream">
+            {currentImage ? (
+              <Image src={currentImage.src} alt={currentImage.alt || product?.name || ""} fill sizes="80px" className="object-contain p-1" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center text-[10px] text-muted">
+                No image
+              </div>
+            )}
+          </div>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            className="block w-full text-sm text-ink file:mr-4 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-dark"
+          />
+        </div>
+        <p className="mt-1 text-xs text-muted">
+          {currentImage ? "Upload a new file to replace the current image." : "Upload an image for this product."}
+        </p>
+      </div>
+
       <div>
         <label className="text-xs font-semibold uppercase tracking-wide text-muted">Name</label>
         <input

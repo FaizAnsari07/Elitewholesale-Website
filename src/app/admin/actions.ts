@@ -11,6 +11,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  uploadProductImage,
   createCategory,
   updateCategory,
   deleteCategory,
@@ -57,8 +58,20 @@ function productPayloadFromForm(formData: FormData) {
   return payload;
 }
 
+async function attachImageIfProvided(
+  payload: Record<string, unknown>,
+  formData: FormData,
+): Promise<void> {
+  const image = formData.get("image");
+  if (image instanceof File && image.size > 0) {
+    const media = await uploadProductImage(image);
+    payload.images = [{ id: media.id }];
+  }
+}
+
 export async function createProductAction(formData: FormData): Promise<void> {
   const payload = productPayloadFromForm(formData);
+  await attachImageIfProvided(payload, formData);
   const product = await createProduct({ ...payload, type: "simple" });
   revalidatePath("/admin/products");
   redirect(`/admin/products/${product.id}`);
@@ -66,6 +79,7 @@ export async function createProductAction(formData: FormData): Promise<void> {
 
 export async function updateProductAction(id: number, formData: FormData): Promise<void> {
   const payload = productPayloadFromForm(formData);
+  await attachImageIfProvided(payload, formData);
   await updateProduct(id, payload);
   revalidatePath("/admin/products");
   revalidatePath(`/admin/products/${id}`);
