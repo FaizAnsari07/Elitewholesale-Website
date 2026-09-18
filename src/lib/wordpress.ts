@@ -171,6 +171,10 @@ export async function getProductsByBrand(slug: string): Promise<Product[]> {
   return data.products.nodes;
 }
 
+// Categories intentionally hidden site-wide (requested removal), independent
+// of what actually exists in WooCommerce.
+const HIDDEN_CATEGORY_SLUGS = new Set(["uncategorized", "kratom-extract-supplements"]);
+
 export async function getAllCategories(): Promise<Category[]> {
   const data = await wpFetch<{ productCategories: { nodes: Category[] } }>(
     `{
@@ -179,7 +183,7 @@ export async function getAllCategories(): Promise<Category[]> {
       }
     }`,
   );
-  return data.productCategories.nodes.filter((c) => c.slug !== "uncategorized");
+  return data.productCategories.nodes.filter((c) => !HIDDEN_CATEGORY_SLUGS.has(c.slug));
 }
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
@@ -213,4 +217,41 @@ export async function getBrandBySlug(slug: string): Promise<Brand | null> {
     { slug },
   );
   return data.productBrand;
+}
+
+// A lightweight product image for brand cards -- avoids pulling the full
+// PRODUCT_FIELDS (variations, attributes, etc.) just to show a thumbnail.
+export async function getBrandSampleImage(slug: string): Promise<string | null> {
+  const data = await wpFetch<{ products: { nodes: { image: { sourceUrl: string } | null }[] } }>(
+    `query BrandSample($slug: [String]) {
+      products(
+        first: 1
+        where: { status: "publish", taxonomyFilter: { filters: [{ taxonomy: PRODUCT_BRAND, terms: $slug }] } }
+      ) {
+        nodes { image { sourceUrl } }
+      }
+    }`,
+    { slug: [slug] },
+  );
+  return data.products.nodes[0]?.image?.sourceUrl ?? null;
+}
+
+export type SearchResult = {
+  slug: string;
+  name: string;
+  image: { sourceUrl: string; altText: string } | null;
+};
+
+// Lightweight product-name search for the header search box.
+export async function searchProducts(query: string): Promise<SearchResult[]> {
+  if (!query.trim()) return [];
+  const data = await wpFetch<{ products: { nodes: SearchResult[] } }>(
+    `query Search($query: String!) {
+      products(first: 8, where: { status: "publish", search: $query }) {
+        nodes { slug name image { sourceUrl altText } }
+      }
+    }`,
+    { query },
+  );
+  return data.products.nodes;
 }

@@ -18,7 +18,6 @@ export const WHOLESALE_PRICE_LABEL = "Login to view wholesale pricing";
 
 export const mainNav = [
   { label: "Home", href: "/" },
-  { label: "Shop", href: "/shop" },
   { label: "Categories", href: "/categories" },
   { label: "Brands", href: "/brands" },
   { label: "About Us", href: "/about-us" },

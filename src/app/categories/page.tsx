@@ -37,7 +37,6 @@ export default async function CategoriesPage() {
             </div>
             <div className="p-4 text-center">
               <span className="text-sm font-semibold text-brand">{c.name}</span>
-              <span className="block text-xs text-muted">{c.count ?? 0} products</span>
             </div>
           </Link>
         ))}

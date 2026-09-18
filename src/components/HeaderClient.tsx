@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import type { Category, Brand } from "@/lib/wordpress";
 import { mainNav } from "@/lib/site";
+import SearchBox from "@/components/SearchBox";
 
 export default function HeaderClient({
   categories,
@@ -55,8 +56,7 @@ export default function HeaderClient({
                             href={`/product-category/${c.slug}`}
                             className="rounded px-2 py-1.5 text-sm text-neutral-700 hover:bg-cream hover:text-brand-dark"
                           >
-                            {c.name}{" "}
-                            <span className="text-neutral-400">({c.count ?? 0})</span>
+                            {c.name}
                           </Link>
                         ))}
                       </div>
@@ -111,13 +111,8 @@ export default function HeaderClient({
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/my-account"
-            className="rounded-md border border-brand px-4 py-2 text-sm font-semibold text-brand-dark hover:bg-brand hover:text-white"
-          >
-            Wholesale Login
-          </Link>
+        <div className="hidden w-64 lg:block">
+          <SearchBox />
         </div>
 
         <button
@@ -139,6 +134,9 @@ export default function HeaderClient({
       {mobileOpen && (
         <div className="border-t border-black/10 bg-white lg:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3 sm:px-6">
+            <div className="pb-3">
+              <SearchBox />
+            </div>
             {mainNav.map((item) => (
               <Link
                 key={item.href}
@@ -149,13 +147,6 @@ export default function HeaderClient({
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/my-account"
-              className="mt-3 rounded-md bg-brand px-4 py-2 text-center text-sm font-semibold text-white"
-              onClick={() => setMobileOpen(false)}
-            >
-              Wholesale Login
-            </Link>
           </nav>
         </div>
       )}

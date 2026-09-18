@@ -31,9 +31,8 @@ export default async function CategoryPage({
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">
-        {category.name}
+        {category.name} <span className="text-muted">({items.length})</span>
       </h1>
-      <p className="mt-2 text-muted">{items.length} products</p>
 
       {items.length === 0 ? (
         <p className="mt-10 text-muted">

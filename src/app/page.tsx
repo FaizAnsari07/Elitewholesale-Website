@@ -308,9 +308,7 @@ export default async function Home() {
                   )}
                 </div>
                 <div className="p-3 text-center">
-                  <span className="text-sm font-semibold text-brand">
-                    {c.name} ({c.count ?? 0})
-                  </span>
+                  <span className="text-sm font-semibold text-brand">{c.name}</span>
                 </div>
               </Link>
             ))}

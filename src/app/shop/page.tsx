@@ -32,7 +32,7 @@ export default async function ShopPage() {
                   href={`/product-category/${c.slug}`}
                   className="text-sm text-ink hover:text-accent"
                 >
-                  {c.name} <span className="text-muted">({c.count ?? 0})</span>
+                  {c.name}
                 </Link>
               </li>
             ))}
