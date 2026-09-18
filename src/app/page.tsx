@@ -367,8 +367,9 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Prices That Satisfies You */}
-      <section className="relative overflow-hidden py-20 text-center">
+      {/* Prices That Satisfies You + Reliable Company: one continuous
+          section sharing the same smoke.mp4 background */}
+      <section className="relative overflow-hidden py-20">
         <video
           autoPlay
           muted
@@ -380,25 +381,25 @@ export default async function Home() {
           <source src="/assets/videos/smoke.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-ink/70" />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-white sm:text-3xl">
-            Prices That Satisfies You
-          </h2>
-          <p className="mt-3 text-white/80">Have a question about our service?</p>
-          <Link
-            href="/contact-us"
-            className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
-            Contact Us
-          </Link>
-        </div>
-      </section>
 
-      {/* Reliable Company */}
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 items-center gap-10 rounded-2xl bg-ink p-10 text-white sm:grid-cols-2">
-          <div>
-            <h2 className="text-2xl font-extrabold sm:text-3xl">Reliable Company</h2>
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-white sm:text-3xl">
+              Prices That Satisfies You
+            </h2>
+            <p className="mt-3 text-white/80">Have a question about our service?</p>
+            <Link
+              href="/contact-us"
+              className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+            >
+              Contact Us
+            </Link>
+          </div>
+
+          <div className="mx-auto mt-16 max-w-lg border-t border-white/20 pt-16 text-center">
+            <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
+              Reliable Company
+            </h2>
             <ul className="mt-6 space-y-3 text-sm text-white/80">
               <li>Authentic products</li>
               <li>Speedy delivery service</li>
