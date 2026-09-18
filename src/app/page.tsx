@@ -368,17 +368,30 @@ export default async function Home() {
       </section>
 
       {/* Prices That Satisfies You */}
-      <section className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-brand sm:text-3xl">
-          Prices That Satisfies You
-        </h2>
-        <p className="mt-3 text-muted">Have a question about our service?</p>
-        <Link
-          href="/contact-us"
-          className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+      <section className="relative overflow-hidden py-20 text-center">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
         >
-          Contact Us
-        </Link>
+          <source src="/assets/videos/smoke.mp4" type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-ink/70" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-white sm:text-3xl">
+            Prices That Satisfies You
+          </h2>
+          <p className="mt-3 text-white/80">Have a question about our service?</p>
+          <Link
+            href="/contact-us"
+            className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+          >
+            Contact Us
+          </Link>
+        </div>
       </section>
 
       {/* Reliable Company */}
