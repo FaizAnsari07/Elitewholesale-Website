@@ -148,14 +148,20 @@ export default async function Home() {
   return (
     <div>
       {/* Announcement bar */}
-      <div className="flex flex-col items-center justify-center gap-2 bg-ink px-4 py-2.5 text-center text-xs font-semibold text-white sm:flex-row sm:gap-6">
-        <span>Disclaimer: Flavors, Quantities and Brands May Vary.</span>
-        <span className="hidden text-accent sm:inline">&bull;</span>
-        <span>Free Delivery</span>
+      <div className="overflow-hidden bg-ink py-2.5 text-xs font-semibold text-white">
+        <div className="marquee-track flex w-max items-center gap-8">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-8 px-4">
+              <span>Disclaimer: Flavors, Quantities and Brands May Vary.</span>
+              <span className="text-Bold">&bull;</span>
+              <span>Free Delivery</span>
+              <span className="text-accent">&bull;</span>
+            </div>
+          ))}
+        </div>
       </div>
-      
       {/* Video hero */}
-    
+
       <section className="relative w-full overflow-hidden bg-black">
         <video
           autoPlay
