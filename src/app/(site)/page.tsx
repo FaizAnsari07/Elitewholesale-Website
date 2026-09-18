@@ -163,15 +163,29 @@ export default async function Home() {
   return (
     <div>
       {/* Announcement bar */}
-      <div className="overflow-hidden bg-ink py-2.5 text-xs font-semibold text-white sm:text-sm">
+      <div className="overflow-hidden bg-ink py-2 text-xs font-semibold text-white sm:text-sm">
         <div className="marquee-track">
           <div className="marquee-content">
             {[0, 1].map((copy) => (
               <div key={copy} className="marquee-item" aria-hidden={copy === 1}>
-                <span>Disclaimer: Flavors, Quantities and Brands May Vary.</span>
-                <span className="text-accent">&bull;</span>
-                <span>Free Delivery</span>
-                <span className="text-accent">&bull;</span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-success px-3 py-1 text-white">
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.25}>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8.25 18.75a1.5 1.5 0 01-3 0m10.5 0a1.5 1.5 0 01-3 0M3.75 4.5h1.386c.51 0 .955.343 1.087.835l.383 1.437M3.75 4.5v9.75a1.5 1.5 0 001.5 1.5h1.5m0 0h9m-9 0V6.75m9 9v-3m0 0h4.5v3a1.5 1.5 0 01-1.5 1.5h-3v-4.5zm0 0V9a.75.75 0 01.75-.75h1.5l2.25 3v3"
+                    />
+                  </svg>
+                  Free Delivery
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-white/80">
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth={2.25}>
+                    <circle cx="12" cy="12" r="9" />
+                    <path strokeLinecap="round" d="M12 8h.01M11.25 12H12v4h.75" />
+                  </svg>
+                  Disclaimer: Flavors, Quantities and Brands May Vary.
+                </span>
+                <span className="h-1 w-1 shrink-0 rounded-full bg-white/25" />
               </div>
             ))}
           </div>
