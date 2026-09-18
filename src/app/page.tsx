@@ -64,6 +64,19 @@ const TOP_BRANDS = [
   { name: "Geek Bar", slug: "geek-bar", logo: "/images/2025/03/geek-bar.png" },
 ];
 
+const RELIABLE_COMPANY_FEATURES = [
+  { label: "Authentic products", path: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" },
+  { label: "Speedy delivery service", path: "M13 10V3L4 14h7v7l9-11h-7z" },
+  {
+    label: "Lowest rates",
+    path: "M7 7h.01M7 3h5.586a1 1 0 01.707.293l6.414 6.414a1 1 0 010 1.414l-7.586 7.586a1 1 0 01-1.414 0L3.293 12.293A1 1 0 013 11.586V6a3 3 0 013-3z",
+  },
+  {
+    label: "Family Owned and Operated",
+    path: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  },
+];
+
 async function resolveProducts(slugs: string[]): Promise<Product[]> {
   const results = await Promise.all(slugs.map(getProductBySlug));
   return results.filter((p): p is Product => Boolean(p));
@@ -396,19 +409,28 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="mx-auto mt-16 max-w-lg border-t border-white/20 pt-16 text-center">
+          <div className="mx-auto mt-16 max-w-4xl border-t border-white/20 pt-16 text-center">
             <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
               Reliable Company
             </h2>
-            <ul className="mt-6 space-y-3 text-sm text-white/80">
-              <li>Authentic products</li>
-              <li>Speedy delivery service</li>
-              <li>Lowest rates</li>
-              <li>Family Owned and Operated</li>
-            </ul>
+            <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
+              {RELIABLE_COMPANY_FEATURES.map((f) => (
+                <div
+                  key={f.label}
+                  className="flex flex-col items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-5 text-center backdrop-blur-sm transition hover:border-brand/60 hover:bg-white/15"
+                >
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
+                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.75}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d={f.path} />
+                    </svg>
+                  </span>
+                  <span className="text-sm font-semibold text-white">{f.label}</span>
+                </div>
+              ))}
+            </div>
             <Link
               href="/about-us"
-              className="mt-8 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
+              className="mt-10 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
             >
               Get Started
             </Link>
