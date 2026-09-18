@@ -1,0 +1,68 @@
+services:
+  db:
+    # The original site's database is MariaDB (confirmed by the AI1WM dump
+    # header: "Class: Ai1wm_Database_Mariadb"), which is why some collations
+    # in the dump (e.g. utf8mb3_uca1400_ai_ci) aren't recognized by MySQL 8.
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_USER: ${MYSQL_USER}
+      MARIADB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  wordpress:
+    image: wordpress:php8.2-apache
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: wp_
+      WORDPRESS_DEBUG: 0
+      # WPGraphQL queries that expand full variation data across 100
+      # products at once exceed PHP's default 128M memory limit.
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_MEMORY_LIMIT', '512M');
+        ini_set('memory_limit', '512M');
+    volumes:
+      - wp_core:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+    ports:
+      - "8080:80"
+
+  wpcli:
+    image: wordpress:cli-php8.2
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      # Shares the `wordpress` service's core files (wp-load.php etc, seeded
+      # by its image on first boot) so WP-CLI has an install to act on.
+      - wp_core:/var/www/html
+      - ./wp-content:/var/www/html/wp-content
+    # Not started by `docker compose up`; invoked ad-hoc via
+    # `docker compose run --rm wpcli wp <command> --allow-root`.
+    profiles: ["cli"]
+
+volumes:
+  db_data:
+  wp_core:

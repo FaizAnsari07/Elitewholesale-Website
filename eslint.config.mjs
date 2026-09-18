@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored WordPress core/plugin/theme code -- not part of the Next.js app.
+    "wordpress/**",
   ]),
 ]);
 

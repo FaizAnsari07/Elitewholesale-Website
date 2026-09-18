@@ -1,26 +1,65 @@
 @import "tailwindcss";
 
+/*
+ * Color tokens recovered from the original WordPress backup:
+ * the site's active Elementor global kit (post ID 40, "Valiburn" kit,
+ * confirmed via the `elementor_active_kit` option) plus explicit
+ * per-widget color overrides found on the live Header, Footer, Home,
+ * About/Contact, Categories, product-archive and single-product
+ * Elementor templates. See project notes for the full audit.
+ */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #1a1a1a;
+
+  /* Kit "Primary" system color (#004AAD) -- used site-wide for h1-h6,
+     links, nav item text, footer headings, and product/shop CTA buttons. */
+  --brand: #004aad;
+  --brand-dark: #00316f;
+
+  /* Kit "Accent" system color (#f6404d) -- icon colors, hover states,
+     borders, mega-menu active item. */
+  --accent: #f6404d;
+
+  /* Kit "Secondary" system color (#000000) -- dark section backgrounds,
+     mega-menu hover/active text, footer bottom bar. */
+  --ink: #000000;
+
+  /* Kit "Text" system color (#7a7a7a) -- default body copy color. */
+  --muted: #7a7a7a;
+
+  /* Recovered card/column background (about equally #EFEDE9 on the
+     Categories template and #F0EFEE on the Contact template). */
+  --surface: #efede9;
+
+  /* Body/header background, confirmed identically in the kit's
+     body_background_color option and directly on the live Header
+     section's background_color setting. */
+  --cream: #f9f8f3;
+
+  /* Kit custom color "Green Color" (#39B549) -- hover state used on the
+     WooCommerce archive "Select Options" buttons; reused here for
+     positive/in-stock indicators. */
+  --success: #39b549;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-accent: var(--accent);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-cream: var(--cream);
+  --color-success: var(--success);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
