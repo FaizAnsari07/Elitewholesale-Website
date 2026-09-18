@@ -82,7 +82,7 @@ async function resolveProducts(slugs: string[]): Promise<Product[]> {
   return results.filter((p): p is Product => Boolean(p));
 }
 
-function ProductRailItem({ product, light = false }: { product: Product; light?: boolean }) {
+function ProductRailItem({ product }: { product: Product }) {
   return (
     <Link
       href={`/product/${product.slug}`}
@@ -99,22 +99,20 @@ function ProductRailItem({ product, light = false }: { product: Product; light?:
           />
         )}
       </div>
-      <h3
-        className={`mt-3 line-clamp-2 text-sm font-semibold ${
-          light ? "text-white" : "text-neutral-900"
-        }`}
-      >
+      <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-neutral-900">
         {product.name}
       </h3>
     </Link>
   );
 }
 
-function NewProductCard({ product }: { product: Product }) {
+function NewProductCard({ product, rail = false }: { product: Product; rail?: boolean }) {
   return (
     <Link
       href={`/product/${product.slug}`}
-      className="group relative flex flex-col rounded-2xl bg-[#FFF5A8] p-4 text-center shadow-sm transition hover:-translate-y-1"
+      className={`group relative flex flex-col rounded-2xl bg-[#FFF5A8] p-4 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md ${
+        rail ? "w-40 shrink-0 sm:w-48" : ""
+      }`}
     >
       <span className="absolute left-2.5 top-2.5 z-10 rounded-full bg-[#FF4D7D] px-2.5 py-1 text-[10px] font-bold uppercase text-white">
         New!
@@ -239,7 +237,7 @@ export default async function Home() {
           </p>
           <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
             {newFlavorsEliquids.map((p) => (
-              <ProductRailItem key={p.id} product={p} />
+              <NewProductCard key={p.id} product={p} rail />
             ))}
           </div>
         </section>
@@ -263,14 +261,14 @@ export default async function Home() {
 
       {/* New Flavors: disposables */}
       {newFlavorsDisposables.length > 0 && (
-        <section className="bg-[#ffff] py-14">
+        <section className="py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900">
               New Flavors <span className="text-brand">NEW</span>
             </h2>
             <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
               {newFlavorsDisposables.map((p) => (
-                <ProductRailItem key={p.id} product={p} light={false} />
+                <NewProductCard key={p.id} product={p} rail />
               ))}
             </div>
           </div>
@@ -279,12 +277,12 @@ export default async function Home() {
 
       {/* New This Season */}
       {newThisSeason.length > 0 && (
-        <section className=" py-14">
+        <section className="py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-neutral-900">New This Season</h2>
             <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
               {newThisSeason.map((p) => (
-                <ProductRailItem key={p.id} product={p} light />
+                <ProductRailItem key={p.id} product={p} />
               ))}
             </div>
           </div>
@@ -368,16 +366,24 @@ export default async function Home() {
       <section className="bg-cream py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-2xl font-bold text-brand">Top Brands</h2>
-          <div className="mt-8 grid grid-cols-2 gap-6 sm:grid-cols-5">
+          <p className="mx-auto mt-2 max-w-xl text-center text-sm text-muted">
+            The trusted names our wholesale customers stock again and again.
+          </p>
+          <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
             {TOP_BRANDS.map((b) => (
               <Link
                 key={b.slug}
                 href={`/brand/${b.slug}`}
-                className="flex items-center justify-center rounded-lg border border-black/10 bg-white p-4"
+                className="group flex flex-col items-center gap-3 rounded-2xl border border-black/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg"
               >
-                <div className="relative h-16 w-full">
-                  <Image src={b.logo} alt={b.name} fill sizes="180px" className="object-contain" />
+                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-cream ring-1 ring-black/5 transition group-hover:ring-brand/30">
+                  <div className="relative h-14 w-20">
+                    <Image src={b.logo} alt={b.name} fill sizes="140px" className="object-contain" />
+                  </div>
                 </div>
+                <span className="text-center text-sm font-semibold text-neutral-900 transition group-hover:text-brand">
+                  {b.name}
+                </span>
               </Link>
             ))}
           </div>

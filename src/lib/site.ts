@@ -14,7 +14,7 @@ export const siteConfig = {
   email: "wholesalevapes1@gmail.com",
 };
 
-export const WHOLESALE_PRICE_LABEL = "Login to view wholesale pricing";
+export const WHOLESALE_PRICE_LABEL = "Contact us for wholesale pricing";
 
 const NEW_PRODUCT_WINDOW_DAYS = 30;
 
