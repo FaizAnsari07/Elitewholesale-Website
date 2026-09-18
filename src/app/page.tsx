@@ -279,9 +279,9 @@ export default async function Home() {
 
       {/* New This Season */}
       {newThisSeason.length > 0 && (
-        <section className=" py-14">
+        <section className="bg-[#ffff] py-14">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900">New This Season</h2>
+            <h2 className="text-2xl font-bold text-white">New This Season</h2>
             <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
               {newThisSeason.map((p) => (
                 <ProductRailItem key={p.id} product={p} light />

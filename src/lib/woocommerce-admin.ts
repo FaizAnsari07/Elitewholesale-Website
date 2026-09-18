@@ -60,7 +60,7 @@ export type WcProduct = {
   date_created: string;
 };
 
-export function listProducts(params: { page?: number; perPage?: number; search?: string } = {}) {
+function listProductsPage(params: { page?: number; perPage?: number; search?: string } = {}) {
   return wpRest<WcProduct[]>("/wc/v3/products", {
     searchParams: {
       page: String(params.page ?? 1),
@@ -69,6 +69,20 @@ export function listProducts(params: { page?: number; perPage?: number; search?:
       ...(params.search ? { search: params.search } : {}),
     },
   });
+}
+
+// WooCommerce's REST API caps per_page at 100, and the real catalog has
+// 220+ products -- loop through every page so the admin list (and its
+// pagination) reflects the true full inventory, not just the first 100.
+export async function listProducts(params: { search?: string } = {}): Promise<WcProduct[]> {
+  const perPage = 100;
+  const all: WcProduct[] = [];
+  for (let page = 1; ; page++) {
+    const batch = await listProductsPage({ page, perPage, search: params.search });
+    all.push(...batch);
+    if (batch.length < perPage) break;
+  }
+  return all;
 }
 
 export function getProduct(id: number) {

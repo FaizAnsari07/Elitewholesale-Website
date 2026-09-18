@@ -9,10 +9,11 @@ import { deleteProductAction } from "@/app/admin/actions";
 export default async function AdminProductsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string }>;
+  searchParams: Promise<{ q?: string; page?: string }>;
 }) {
-  const { q } = await searchParams;
-  const products = await listProducts({ perPage: 100, search: q });
+  const { q, page } = await searchParams;
+  const currentPage = Math.max(1, Number(page) || 1);
+  const products = await listProducts({ search: q });
 
   const columns: DataTableColumn<WcProduct>[] = [
     {
@@ -108,7 +109,15 @@ export default async function AdminProductsPage({
           </Link>
         </div>
 
-        <DataTable columns={columns} rows={products} getRowId={(p) => p.id} />
+        <DataTable
+          columns={columns}
+          rows={products}
+          getRowId={(p) => p.id}
+          currentPage={currentPage}
+          makeHref={(n) =>
+            `/admin/products?${new URLSearchParams({ ...(q ? { q } : {}), page: String(n) })}`
+          }
+        />
       </div>
     </div>
   );

@@ -6,7 +6,13 @@ import DeleteButton from "@/components/admin/DeleteButton";
 import { listCategories, type WcTerm } from "@/lib/woocommerce-admin";
 import { deleteCategoryAction } from "@/app/admin/actions";
 
-export default async function AdminCategoriesPage() {
+export default async function AdminCategoriesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = Math.max(1, Number(page) || 1);
   const categories = await listCategories();
 
   const columns: DataTableColumn<WcTerm>[] = [
@@ -51,7 +57,13 @@ export default async function AdminCategoriesPage() {
             + Add Category
           </Link>
         </div>
-        <DataTable columns={columns} rows={categories} getRowId={(c) => c.id} />
+        <DataTable
+          columns={columns}
+          rows={categories}
+          getRowId={(c) => c.id}
+          currentPage={currentPage}
+          makeHref={(n) => `/admin/categories?page=${n}`}
+        />
       </div>
     </div>
   );

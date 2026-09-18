@@ -5,7 +5,13 @@ import DeleteButton from "@/components/admin/DeleteButton";
 import { listBrands, type WcTerm } from "@/lib/woocommerce-admin";
 import { deleteBrandAction } from "@/app/admin/actions";
 
-export default async function AdminBrandsPage() {
+export default async function AdminBrandsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const { page } = await searchParams;
+  const currentPage = Math.max(1, Number(page) || 1);
   const brands = await listBrands();
 
   const columns: DataTableColumn<WcTerm>[] = [
@@ -38,7 +44,13 @@ export default async function AdminBrandsPage() {
             + Add Brand
           </Link>
         </div>
-        <DataTable columns={columns} rows={brands} getRowId={(b) => b.id} />
+        <DataTable
+          columns={columns}
+          rows={brands}
+          getRowId={(b) => b.id}
+          currentPage={currentPage}
+          makeHref={(n) => `/admin/brands?page=${n}`}
+        />
       </div>
     </div>
   );

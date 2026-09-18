@@ -4,7 +4,7 @@ import { listProducts, listCategories, listBrands } from "@/lib/woocommerce-admi
 
 export default async function AdminDashboardPage() {
   const [products, categories, brands] = await Promise.all([
-    listProducts({ perPage: 100 }),
+    listProducts(),
     listCategories(),
     listBrands(),
   ]);
