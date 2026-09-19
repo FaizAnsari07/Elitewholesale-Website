@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ExternalLink } from "lucide-react";
+import { Wordmark } from "@/components/HeaderClient";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -16,11 +18,12 @@ export default function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-60 shrink-0 border-r border-white/10 bg-ink lg:block">
-      <div className="flex h-16 items-center gap-2 border-b border-white/10 px-5">
-        <span className="text-lg font-extrabold text-white">Elite Wholesale</span>
-      </div>
-      <nav className="space-y-1 p-3">
+    <aside className="glass hidden w-60 shrink-0 rounded-none border-y-0 border-l-0 lg:sticky lg:top-0 lg:block lg:h-screen">
+      <Link href="/admin" className="block border-b border-border px-5 py-3" aria-label="Elite Wholesale admin">
+        <Wordmark className="mx-auto h-20" />
+        <p className="section-label mt-1 text-center">Admin panel</p>
+      </Link>
+      <nav className="grid gap-1 p-3">
         {NAV_ITEMS.map((item) => {
           const active =
             item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
@@ -28,18 +31,23 @@ export default function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition ${
-                active ? "bg-brand text-white" : "text-white/70 hover:bg-white/10 hover:text-white"
+              className={`flex min-w-0 items-center gap-2 rounded-lg px-3 py-3 text-sm font-semibold transition ${
+                active
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-foreground/5 hover:text-foreground"
               }`}
             >
-              <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75}>
+              <svg viewBox="0 0 24 24" className="size-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={1.75}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
-              {item.label}
+              <span className="truncate">{item.label}</span>
             </Link>
           );
         })}
       </nav>
+      <Link href="/" target="_blank" className="mt-6 flex items-center gap-2 px-6 text-xs text-muted-foreground hover:text-primary">
+        View storefront <ExternalLink className="size-3" />
+      </Link>
     </aside>
   );
 }

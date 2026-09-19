@@ -14,7 +14,7 @@ export default function ProductGallery({
 
   if (images.length === 0) {
     return (
-      <div className="flex aspect-square w-full items-center justify-center rounded-xl bg-cream text-neutral-400">
+      <div className="flex aspect-square w-full items-center justify-center glass rounded-2xl text-muted-foreground">
         No image available
       </div>
     );
@@ -22,13 +22,13 @@ export default function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-cream">
+      <div className="relative aspect-square w-full overflow-hidden glass rounded-2xl">
         <Image
           src={images[active]}
           alt={title}
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-contain p-6"
+          className="object-contain p-8"
           priority
         />
       </div>
@@ -39,8 +39,8 @@ export default function ProductGallery({
               key={img}
               type="button"
               onClick={() => setActive(i)}
-              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-md border ${
-                i === active ? "border-brand" : "border-black/10"
+              className={`relative h-16 w-16 shrink-0 overflow-hidden rounded-lg border bg-foreground/5 ${
+                i === active ? "border-primary" : "border-border"
               }`}
             >
               <Image src={img} alt="" fill sizes="64px" className="object-contain p-1" />

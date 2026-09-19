@@ -43,7 +43,7 @@ export default function DataTable<T>({
 }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-lg border border-black/10 bg-white p-10 text-center text-sm text-muted">
+      <div className="glass rounded-xl p-10 text-center text-sm text-muted-foreground">
         {emptyMessage}
       </div>
     );
@@ -54,23 +54,23 @@ export default function DataTable<T>({
   const pageRows = makeHref ? rows.slice((page - 1) * pageSize, page * pageSize) : rows;
 
   return (
-    <div className="overflow-hidden rounded-lg border border-black/10 bg-white">
+    <div className="glass overflow-hidden rounded-xl">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px] text-left text-sm">
-          <thead className="border-b border-black/10 bg-cream">
+          <thead className="border-b border-border text-[11px] uppercase text-muted-foreground">
             <tr>
               {columns.map((col) => (
-                <th key={col.key} className={`px-4 py-3 font-semibold text-ink ${col.className ?? ""}`}>
+                <th key={col.key} className={`px-4 py-4 font-semibold ${col.className ?? ""}`}>
                   {col.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-black/5">
+          <tbody className="divide-y divide-border">
             {pageRows.map((row) => (
-              <tr key={getRowId(row)} className="hover:bg-cream/50">
+              <tr key={getRowId(row)} className="hover:bg-foreground/[.03]">
                 {columns.map((col) => (
-                  <td key={col.key} className={`px-4 py-3 align-middle text-ink ${col.className ?? ""}`}>
+                  <td key={col.key} className={`px-4 py-3 align-middle text-foreground ${col.className ?? ""}`}>
                     {col.render(row)}
                   </td>
                 ))}
@@ -81,8 +81,8 @@ export default function DataTable<T>({
       </div>
 
       {makeHref && totalPages > 1 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-black/10 bg-cream/50 px-4 py-3">
-          <p className="text-xs text-muted">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border px-4 py-3">
+          <p className="text-xs text-muted-foreground">
             Showing {(page - 1) * pageSize + 1}
             &ndash;{Math.min(page * pageSize, rows.length)} of {rows.length}
           </p>
@@ -92,7 +92,7 @@ export default function DataTable<T>({
             </PagerLink>
             {getPageNumbers(page, totalPages).map((p, i) =>
               p === "..." ? (
-                <span key={`ellipsis-${i}`} className="px-1.5 text-sm text-muted">
+                <span key={`ellipsis-${i}`} className="px-1.5 text-sm text-muted-foreground">
                   &hellip;
                 </span>
               ) : (
@@ -101,7 +101,7 @@ export default function DataTable<T>({
                   href={makeHref(p)}
                   aria-current={p === page ? "page" : undefined}
                   className={`flex h-8 w-8 items-center justify-center rounded-md text-sm font-semibold transition ${
-                    p === page ? "bg-brand text-white" : "border border-black/15 text-ink hover:bg-white"
+                    p === page ? "bg-primary text-primary-foreground" : "border border-border text-foreground hover:bg-foreground/10"
                   }`}
                 >
                   {p}
@@ -129,7 +129,7 @@ function PagerLink({
 }) {
   if (!href) {
     return (
-      <span className="flex h-8 w-8 items-center justify-center rounded-md border border-black/10 text-black/25">
+      <span className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-muted-foreground/40">
         {children}
       </span>
     );
@@ -138,7 +138,7 @@ function PagerLink({
     <Link
       href={href}
       aria-label={label}
-      className="flex h-8 w-8 items-center justify-center rounded-md border border-black/15 text-ink hover:bg-white"
+      className="flex h-8 w-8 items-center justify-center rounded-md border border-border text-foreground hover:bg-foreground/10"
     >
       {children}
     </Link>

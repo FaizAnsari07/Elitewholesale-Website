@@ -23,7 +23,7 @@ export default function DeleteButton({
           action();
         });
       }}
-      className="text-sm font-semibold text-accent hover:underline disabled:opacity-50"
+      className="text-sm font-semibold text-destructive hover:underline disabled:opacity-50"
     >
       {pending ? "Deleting..." : label}
     </button>

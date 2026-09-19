@@ -13,7 +13,7 @@ export default async function AdminSettingsPage({
   return (
     <div>
       <AdminHeader title="Email Settings" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         {saved && (
           <p className="mb-4 max-w-lg rounded-md bg-success/10 px-3 py-2 text-sm font-medium text-success">
             Settings saved.
@@ -21,13 +21,13 @@ export default async function AdminSettingsPage({
         )}
         <form
           action={saveSettingsAction}
-          className="max-w-lg space-y-5 rounded-xl border border-black/10 bg-white p-6"
+          className="glass max-w-lg space-y-5 rounded-xl p-6"
         >
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-muted">
+            <label className="label">
               Enquiry Notification Email
             </label>
-            <p className="mt-1 text-xs text-muted">
+            <p className="mt-1 text-xs text-muted-foreground">
               Wholesale enquiries submitted from the site&apos;s product/
               enquiry pages are addressed to this email.
             </p>
@@ -36,12 +36,12 @@ export default async function AdminSettingsPage({
               type="email"
               name="enquiryRecipientEmail"
               defaultValue={settings.enquiryRecipientEmail}
-              className="mt-2 w-full rounded-md border border-black/15 px-3 py-2 text-sm focus:border-brand focus:outline-none"
+              className="field mt-2"
             />
           </div>
           <button
             type="submit"
-            className="rounded-md bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
+            className="btn btn-primary"
           >
             Save Settings
           </button>

@@ -17,7 +17,7 @@ export default async function EditBrandPage({
   return (
     <div>
       <AdminHeader title={`Edit: ${brand.name}`} />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <TermForm action={updateBrandAction.bind(null, brandId)} term={brand} submitLabel="Save Changes" />
       </div>
     </div>

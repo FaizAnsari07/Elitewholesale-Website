@@ -6,7 +6,7 @@ export default function NewCategoryPage() {
   return (
     <div>
       <AdminHeader title="Add Category" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <TermForm withImage action={createCategoryAction} submitLabel="Create Category" />
       </div>
     </div>

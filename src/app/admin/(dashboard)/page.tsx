@@ -18,38 +18,38 @@ export default async function AdminDashboardPage() {
   return (
     <div>
       <AdminHeader title="Dashboard" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {stats.map((s) => (
             <Link
               key={s.label}
               href={s.href}
-              className="rounded-xl border border-black/10 bg-white p-6 transition hover:shadow-md"
+              className="glass rounded-xl p-6 transition hover:border-primary/50"
             >
-              <p className="text-3xl font-extrabold text-brand">{s.value}</p>
-              <p className="mt-1 text-sm font-semibold text-muted">{s.label}</p>
+              <p className="text-3xl font-black text-foreground">{s.value}</p>
+              <p className="mt-1 text-sm font-semibold text-muted-foreground">{s.label}</p>
             </Link>
           ))}
         </div>
 
-        <div className="mt-8 rounded-xl border border-black/10 bg-white p-6">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink">Quick Actions</h2>
+        <div className="glass mt-8 rounded-xl p-6">
+          <h2 className="section-label">Quick actions</h2>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/admin/products/new"
-              className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+              className="btn btn-primary"
             >
               + Add Product
             </Link>
             <Link
               href="/admin/categories/new"
-              className="rounded-md border border-black/15 px-4 py-2 text-sm font-semibold text-ink hover:bg-cream"
+              className="btn btn-secondary"
             >
               + Add Category
             </Link>
             <Link
               href="/admin/brands/new"
-              className="rounded-md border border-black/15 px-4 py-2 text-sm font-semibold text-ink hover:bg-cream"
+              className="btn btn-secondary"
             >
               + Add Brand
             </Link>

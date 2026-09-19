@@ -9,7 +9,7 @@ export default async function NewProductPage() {
   return (
     <div>
       <AdminHeader title="Add Product" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <ProductForm action={createProductAction} categories={categories}
           brands={brands} submitLabel="Create Product" />
       </div>

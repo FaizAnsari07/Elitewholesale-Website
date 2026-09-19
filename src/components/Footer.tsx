@@ -1,5 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Wordmark } from "@/components/HeaderClient";
 import { siteConfig } from "@/lib/site";
 
 const QUICK_LINK_BRANDS = [
@@ -34,119 +35,85 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const heading = "section-label";
+  const link = "text-muted-foreground hover:text-primary";
 
   return (
-    <footer className="mt-16 border-t border-black/10 bg-surface text-ink">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-12 sm:px-6 sm:grid-cols-2 lg:grid-cols-5 lg:px-8">
-        <div className="sm:col-span-2 lg:col-span-1">
-          <Image
-            src="/images/elite-wholesale-logo.png"
-            alt="Elite Wholesale"
-            width={200}
-            height={92}
-            className="h-12 w-auto"
-          />
-          <p className="mt-4 text-sm leading-relaxed text-muted">
-            {siteConfig.description}
-          </p>
-        </div>
+    <footer className="mt-20 px-3 pb-5 sm:px-5">
+      <div className="glass page-shell rounded-2xl py-10">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr_1fr]">
+          <div className="sm:col-span-2 lg:col-span-1">
+            <Wordmark className="h-20" />
+            <p className="mt-4 max-w-md text-sm leading-6 text-muted-foreground">{siteConfig.description}</p>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-brand">
-            Get Started
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li>
-              <Link href="/about-us" className="hover:text-accent">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact-us" className="hover:text-accent">
-                Contact Us
-              </Link>
-            </li>
-            <li>
-              <Link href="/enquiry" className="hover:text-accent">
-                Your Enquiry Cart
-              </Link>
-            </li>
-          </ul>
-        </div>
+          <div>
+            <p className={heading}>Get Started</p>
+            <ul className="mt-4 grid gap-2 text-sm">
+              <li><Link href="/about-us" className={link}>About Us</Link></li>
+              <li><Link href="/contact-us" className={link}>Contact Us</Link></li>
+              <li><Link href="/enquiry" className={link}>Your Enquiry Cart</Link></li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-brand">
-            Quick Links
-          </h3>
-          <ul className="mt-4 space-y-2 text-sm">
-            {QUICK_LINK_BRANDS.map((b) => (
-              <li key={b.slug}>
-                <Link href={`/brand/${b.slug}`} className="hover:text-accent">
-                  {b.name}
-                </Link>
+          <div>
+            <p className={heading}>Quick Links</p>
+            <ul className="mt-4 grid gap-2 text-sm">
+              {QUICK_LINK_BRANDS.map((b) => (
+                <li key={b.slug}>
+                  <Link href={`/brand/${b.slug}`} className={link}>{b.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <p className={heading}>Contact</p>
+            <ul className="mt-4 grid gap-3 text-sm text-muted-foreground">
+              <li className="flex gap-2">
+                <MapPin className="mt-0.5 size-4 shrink-0" />
+                <span>{siteConfig.address.line1}<br />{siteConfig.address.line2}</span>
               </li>
-            ))}
-          </ul>
-        </div>
+              <li>
+                <a href={`mailto:${siteConfig.email}`} className="flex gap-2 hover:text-primary">
+                  <Mail className="size-4 shrink-0" />{siteConfig.email}
+                </a>
+              </li>
+              <li>
+                <a href={siteConfig.phoneHref} className="flex gap-2 hover:text-primary">
+                  <Phone className="size-4 shrink-0" />{siteConfig.phone}
+                </a>
+              </li>
+            </ul>
+          </div>
 
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-brand">
-            Contact
-          </h3>
-          <ul className="mt-4 space-y-3 text-sm">
-            <li>
-              {siteConfig.address.line1}
-              <br />
-              {siteConfig.address.line2}
-            </li>
-            <li>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-accent">
-                {siteConfig.email}
-              </a>
-            </li>
-            <li>
-              <a href={siteConfig.phoneHref} className="hover:text-accent">
-                {siteConfig.phone}
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-brand">
-            Open Hours
-          </h3>
-          <p className="mt-4 text-sm">Mon - Fri : 09.00 - 18.00</p>
-
-          <div className="mt-6 flex gap-3">
-            {SOCIAL_LINKS.map((s) => (
-              <a
-                key={s.name}
-                href={s.href}
-                aria-label={s.name}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-white transition hover:bg-accent"
-              >
-                <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current">
-                  <path d={s.path} />
-                </svg>
-              </a>
-            ))}
+          <div>
+            <p className={heading}>Open Hours</p>
+            <p className="mt-4 text-sm text-muted-foreground">Mon - Fri : 09.00 - 18.00</p>
+            <div className="mt-5 flex gap-2">
+              {SOCIAL_LINKS.map((s) => (
+                <a
+                  key={s.name}
+                  href={s.href}
+                  aria-label={s.name}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-secondary size-9 min-h-0 p-0 hover:text-primary"
+                >
+                  <svg viewBox="0 0 24 24" className="size-4 fill-current">
+                    <path d={s.path} />
+                  </svg>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="border-t border-white/10 bg-ink py-6 text-white/60">
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-4 text-center text-xs sm:flex-row sm:justify-between sm:px-6 lg:px-8">
+        <div className="mt-8 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row sm:justify-between">
           <span>&copy; {year} Elite Wholesale. All rights reserved.</span>
-          <div className="flex gap-4">
-            <Link href="/terms-services" className="hover:text-white">
-              Terms &amp; Services
-            </Link>
-            <Link href="/privacy-policy" className="hover:text-white">
-              Privacy Policy
-            </Link>
+          <div className="flex gap-5">
+            <Link href="/terms-services" className="hover:text-foreground">Terms &amp; Services</Link>
+            <Link href="/privacy-policy" className="hover:text-foreground">Privacy Policy</Link>
           </div>
         </div>
       </div>

@@ -25,13 +25,13 @@ const SITE_PAGES: SitePage[] = [
 
 export default function AdminPagesPage() {
   const columns: DataTableColumn<SitePage>[] = [
-    { key: "title", header: "Title", render: (p) => <span className="font-semibold text-brand">{p.title}</span> },
-    { key: "route", header: "Route", render: (p) => <span className="text-muted">{p.route}</span> },
+    { key: "title", header: "Title", render: (p) => <span className="font-semibold">{p.title}</span> },
+    { key: "route", header: "Route", render: (p) => <span className="text-muted-foreground">{p.route}</span> },
     {
       key: "actions",
       header: "Actions",
       render: (p) => (
-        <Link href={p.route} target="_blank" className="text-sm font-semibold text-ink hover:underline">
+        <Link href={p.route} target="_blank" className="text-sm font-semibold text-primary hover:underline">
           View Live Page
         </Link>
       ),
@@ -41,8 +41,8 @@ export default function AdminPagesPage() {
   return (
     <div>
       <AdminHeader title="Pages" />
-      <div className="p-6">
-        <p className="mb-4 max-w-2xl text-sm text-muted">
+      <div className="p-4 sm:p-7">
+        <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
           Page content is built directly into the site&apos;s codebase rather
           than managed here. This is a reference list of every page.
         </p>

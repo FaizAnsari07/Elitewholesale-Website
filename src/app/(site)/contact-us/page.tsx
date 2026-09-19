@@ -28,7 +28,7 @@ const CONTACT_CARDS = [
   {
     label: "Call Us",
     value: (
-      <a href={siteConfig.phoneHref} className="hover:text-accent">
+      <a href={siteConfig.phoneHref} className="hover:text-primary">
         {siteConfig.phone}
       </a>
     ),
@@ -43,7 +43,7 @@ const CONTACT_CARDS = [
   {
     label: "Email Us",
     value: (
-      <a href={`mailto:${siteConfig.email}`} className="hover:text-accent">
+      <a href={`mailto:${siteConfig.email}`} className="hover:text-primary">
         {siteConfig.email}
       </a>
     ),
@@ -71,43 +71,41 @@ const CONTACT_CARDS = [
 export default function ContactUsPage() {
   return (
     <div>
-      <div className="bg-gradient-to-br from-brand to-brand-dark py-16 text-center text-white">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">
-            We&apos;d love to hear from you
-          </span>
-          <h1 className="mt-3 text-3xl font-extrabold sm:text-4xl">Get In Touch</h1>
-          <p className="mx-auto mt-3 max-w-xl text-white/80">
-            Questions about wholesale pricing, availability, or a bulk order? Reach out and our
-            team will follow up as soon as possible.
+      <div className="page-shell pt-12">
+        <div className="max-w-3xl">
+          <p className="section-label">We&apos;d love to hear from you</p>
+          <h1 className="mt-3 text-4xl font-black sm:text-5xl">Get in touch</h1>
+          <p className="mt-4 text-muted-foreground">
+            Questions about wholesale pricing, availability, or a bulk order? Reach out and our team will
+            follow up as soon as possible.
           </p>
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+      <div className="page-shell py-10">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {CONTACT_CARDS.map((card) => (
             <div
               key={card.label}
-              className="rounded-2xl border border-black/10 bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              className="glass rounded-2xl p-6 text-center transition hover:-translate-y-1 hover:border-primary/50"
             >
-              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-accent/10 text-accent">
+              <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                 <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.75}>
                   {card.icon}
                 </svg>
               </span>
-              <h3 className="mt-4 text-xs font-bold uppercase tracking-wide text-brand">
+              <h3 className="mt-4 section-label">
                 {card.label}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink">{card.value}</p>
+              <p className="mt-2 text-sm leading-relaxed text-foreground">{card.value}</p>
             </div>
           ))}
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-8 lg:grid-cols-[1.1fr_1fr]">
-          <div className="rounded-2xl border border-black/10 bg-white p-8 shadow-sm">
-            <h2 className="text-xl font-bold text-brand">Send Us a Message</h2>
-            <p className="mt-2 text-sm text-muted">
+          <div className="glass-strong rounded-2xl p-8">
+            <h2 className="font-display text-2xl font-bold text-foreground">Send Us a Message</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
               Fill out the form below and we&apos;ll follow up by email. For urgent wholesale
               orders, call or email us directly above.
             </p>
@@ -122,38 +120,38 @@ export default function ContactUsPage() {
                 type="text"
                 required
                 placeholder="Your Name"
-                className="rounded-md border border-neutral-300 px-4 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15"
+                className="field"
               />
               <input
                 name="email"
                 type="email"
                 required
                 placeholder="Your Email"
-                className="rounded-md border border-neutral-300 px-4 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15"
+                className="field"
               />
               <input
                 name="subject"
                 type="text"
                 placeholder="Subject"
-                className="rounded-md border border-neutral-300 px-4 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15 sm:col-span-2"
+                className="field sm:col-span-2"
               />
               <textarea
                 name="message"
                 required
                 rows={5}
                 placeholder="Your Message"
-                className="rounded-md border border-neutral-300 px-4 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15 sm:col-span-2"
+                className="field sm:col-span-2"
               />
               <button
                 type="submit"
-                className="rounded-md bg-brand px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark sm:col-span-2 sm:w-fit"
+                className="btn btn-primary sm:col-span-2 sm:w-fit"
               >
                 Send Message
               </button>
             </form>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-black/10 shadow-sm">
+          <div className="glass overflow-hidden rounded-2xl">
             <iframe
               title={siteConfig.address.mapQuery}
               src={`https://maps.google.com/maps?q=${encodeURIComponent(

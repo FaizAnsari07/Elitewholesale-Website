@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default function AdminDashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <div className="flex min-h-screen bg-cream">
+    <div className="flex min-h-screen">
       <AdminSidebar />
       <div className="min-w-0 flex-1">{children}</div>
     </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, ShieldCheck, Store, Tag, Truck } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
 import { getAllCategories, getProductBySlug, type Product } from "@/lib/catalog";
 
@@ -82,56 +83,31 @@ async function resolveProducts(slugs: string[]): Promise<Product[]> {
   return results.filter((p): p is Product => Boolean(p));
 }
 
-function ProductRailItem({ product }: { product: Product }) {
+function Rail({ items }: { items: Product[] }) {
   return (
-    <Link
-      href={`/product/${product.slug}`}
-      className="group flex w-36 shrink-0 flex-col items-center text-center sm:w-44"
-    >
-      <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white">
-        {product.image && (
-          <Image
-            src={product.image.sourceUrl}
-            alt={product.image.altText || product.name}
-            fill
-            sizes="176px"
-            className="object-contain p-3 transition group-hover:scale-105"
-          />
-        )}
-      </div>
-      <h3 className="mt-3 line-clamp-2 text-sm font-semibold text-neutral-900">
-        {product.name}
-      </h3>
-    </Link>
+    <div className="-mx-1 mt-7 flex gap-4 overflow-x-auto px-1 pb-3">
+      {items.map((p) => (
+        <div key={p.id} className="w-56 shrink-0 sm:w-64">
+          <ProductCard product={p} />
+        </div>
+      ))}
+    </div>
   );
 }
 
-function NewProductCard({ product, rail = false }: { product: Product; rail?: boolean }) {
+function Heading({ label, title, href }: { label: string; title: string; href?: string }) {
   return (
-    <Link
-      href={`/product/${product.slug}`}
-      className={`group relative flex flex-col rounded-2xl bg-[#FFF5A8] p-4 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md ${
-        rail ? "w-40 shrink-0 sm:w-48" : ""
-      }`}
-    >
-      <span className="absolute left-2.5 top-2.5 z-10 rounded-full bg-[#FF4D7D] px-2.5 py-1 text-[10px] font-bold uppercase text-white">
-        New!
-      </span>
-      <div className="relative aspect-square w-full">
-        {product.image && (
-          <Image
-            src={product.image.sourceUrl}
-            alt={product.image.altText || product.name}
-            fill
-            sizes="(max-width: 768px) 40vw, 220px"
-            className="object-contain transition group-hover:scale-105"
-          />
-        )}
+    <div className="flex items-end justify-between gap-4">
+      <div>
+        <p className="section-label">{label}</p>
+        <h2 className="mt-2 text-3xl font-black">{title}</h2>
       </div>
-      <h3 className="mt-2 line-clamp-2 text-sm font-bold text-neutral-900">
-        {product.name}
-      </h3>
-    </Link>
+      {href && (
+        <Link href={href} className="hidden text-sm font-semibold text-primary sm:block">
+          View all <ArrowRight className="inline size-4" />
+        </Link>
+      )}
+    </div>
   );
 }
 
@@ -162,171 +138,156 @@ export default async function Home() {
 
   return (
     <div>
-      {/* Announcement bar */}
-      <div className="overflow-hidden bg-ink py-2 text-xs font-semibold text-white sm:text-sm">
+      {/* Announcement bar: 12 items in two identical halves, animated by -50%, so
+          the message fills the full width and loops without a gap. */}
+      <div className="surface-dark mx-3 overflow-hidden rounded-xl py-2.5 text-xs font-semibold sm:mx-5 sm:text-sm">
         <div className="marquee-track">
           <div className="marquee-content">
-            {[0, 1].map((copy) => (
-              <div key={copy} className="marquee-item" aria-hidden={copy === 1}>
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-success px-3 py-1 text-white">
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2.25}>
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M8.25 18.75a1.5 1.5 0 01-3 0m10.5 0a1.5 1.5 0 01-3 0M3.75 4.5h1.386c.51 0 .955.343 1.087.835l.383 1.437M3.75 4.5v9.75a1.5 1.5 0 001.5 1.5h1.5m0 0h9m-9 0V6.75m9 9v-3m0 0h4.5v3a1.5 1.5 0 01-1.5 1.5h-3v-4.5zm0 0V9a.75.75 0 01.75-.75h1.5l2.25 3v3"
-                    />
-                  </svg>
+            {Array.from({ length: 12 }, (_, i) => (
+              <div key={i} className="marquee-item" aria-hidden={i > 0}>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-primary-foreground">
+                  <Truck className="size-3.5" />
                   Free Delivery
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-white/80">
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 text-accent" fill="none" stroke="currentColor" strokeWidth={2.25}>
-                    <circle cx="12" cy="12" r="9" />
-                    <path strokeLinecap="round" d="M12 8h.01M11.25 12H12v4h.75" />
-                  </svg>
+                <span className="text-foreground/80">
                   Disclaimer: Flavors, Quantities and Brands May Vary.
                 </span>
-                <span className="h-1 w-1 shrink-0 rounded-full bg-white/25" />
+                <span className="size-1.5 shrink-0 rounded-full bg-primary/60" />
               </div>
             ))}
           </div>
         </div>
       </div>
-      {/* Video hero */}
 
-      <section className="relative w-full overflow-hidden bg-black">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="h-[300px] w-full object-cover sm:h-[400px] lg:h-[900px]"
-        >
-          <source src="/assets/videos/Geek-Bar-Video.mp4" type="video/mp4" />
-        </video>
-      </section>
-
-      {/* Hero product */}
-      {heroProduct && (
-        <section className="bg-cream">
-          <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-14 sm:px-6 md:grid-cols-2 lg:px-8">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-accent">
-                Exclusive Distributor
-              </p>
-              <h1 className="mt-3 text-4xl font-extrabold leading-tight text-brand sm:text-5xl">
-                {heroProduct.name}
-              </h1>
-              <div className="mt-8">
-                <Link
-                  href={`/product/${heroProduct.slug}`}
-                  className="rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-                >
-                  Shop Now
-                </Link>
-              </div>
-            </div>
-            {heroProduct.image && (
-              <div className="relative mx-auto aspect-square w-full max-w-sm">
-                <Image
-                  src={heroProduct.image.sourceUrl}
-                  alt={heroProduct.image.altText || heroProduct.name}
-                  fill
-                  sizes="400px"
-                  className="object-contain"
-                  priority
-                />
-              </div>
-            )}
+      {/* Hero: text on the left, video on the right */}
+      <section className="page-shell grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2 lg:gap-14 lg:py-20">
+        <div>
+          <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase text-foreground/80">
+            <span className="size-2 rounded-full bg-primary" />
+            Gas station · convenience · smoke shop supply
+          </span>
+          <h1 className="mt-7 font-display text-5xl font-black leading-[.92] sm:text-7xl xl:text-8xl">
+            Wholesale,
+            <br />
+            <em className="text-primary">without</em> the wait.
+          </h1>
+          <p className="mt-6 max-w-xl text-lg leading-7 text-muted-foreground">
+            Explore our catalogue of trusted products for independent retailers and build an enquiry in minutes.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link href="/shop" className="btn btn-primary">
+              Browse catalogue <ArrowRight className="size-4" />
+            </Link>
+            <Link href="/enquiry" className="btn btn-secondary">
+              Build an enquiry
+            </Link>
           </div>
-        </section>
-      )}
+          <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
+            {[
+              { Icon: Truck, label: "Free delivery" },
+              { Icon: ShieldCheck, label: "Authentic products" },
+              { Icon: Store, label: "Family operated" },
+            ].map(({ Icon, label }) => (
+              <div key={label} className="border-l border-border pl-3">
+                <Icon className="size-5 text-primary" />
+                <p className="mt-2 text-xs font-semibold text-muted-foreground">{label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative">
+          <div className="glass-strong overflow-hidden rounded-3xl p-2.5 shadow-2xl sm:p-3">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="aspect-[4/3] w-full rounded-2xl object-cover lg:aspect-[5/4]"
+            >
+              <source src="/assets/videos/Geek-Bar-Video.mp4" type="video/mp4" />
+            </video>
+          </div>
+          {heroProduct && (
+            <Link
+              href={`/product/${heroProduct.slug}`}
+              className="surface-dark absolute -bottom-4 left-4 rounded-xl p-4 transition hover:border-primary/50 sm:left-6"
+            >
+              <p className="section-label">Exclusive distributor</p>
+              <p className="mt-1 max-w-52 font-display font-bold">{heroProduct.name}</p>
+            </Link>
+          )}
+        </div>
+      </section>
 
       {/* New Flavors: e-liquids */}
       {newFlavorsEliquids.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-brand">New Flavors</h2>
-          <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-accent">
-            New Bigger Size
-          </p>
-          <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
-            {newFlavorsEliquids.map((p) => (
-              <NewProductCard key={p.id} product={p} rail />
-            ))}
-          </div>
+        <section className="page-shell py-16">
+          <Heading label="New bigger size" title="New flavors" />
+          <Rail items={newFlavorsEliquids} />
         </section>
       )}
 
       {/* New Products */}
       {newProducts.length > 0 && (
-        <section className="bg-cream py-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-extrabold text-[#0057FF]">
-              New <span className="text-[#FF4D7D]">Products</span>
-            </h2>
-            <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-              {newProducts.map((p) => (
-                <NewProductCard key={p.id} product={p} />
-              ))}
-            </div>
+        <section className="page-shell py-16">
+          <Heading label="Just landed" title="New products" href="/shop" />
+          <div className="product-grid mt-7">
+            {newProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
           </div>
         </section>
       )}
 
       {/* New Flavors: disposables */}
       {newFlavorsDisposables.length > 0 && (
-        <section className="py-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900">
-              New Flavors <span className="text-brand">NEW</span>
-            </h2>
-            <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
-              {newFlavorsDisposables.map((p) => (
-                <NewProductCard key={p.id} product={p} rail />
-              ))}
-            </div>
-          </div>
+        <section className="page-shell py-16">
+          <Heading label="Disposables" title="New flavors" href="/product-category/disposable-vapes" />
+          <Rail items={newFlavorsDisposables} />
         </section>
       )}
 
       {/* New This Season */}
       {newThisSeason.length > 0 && (
-        <section className="py-14">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-neutral-900">New This Season</h2>
-            <div className="mt-6 flex gap-4 overflow-x-auto pb-2">
-              {newThisSeason.map((p) => (
-                <ProductRailItem key={p.id} product={p} />
-              ))}
-            </div>
-          </div>
+        <section className="page-shell py-16">
+          <Heading label="Seasonal" title="New this season" />
+          <Rail items={newThisSeason} />
         </section>
       )}
 
       {/* Top categories */}
       {topCategories.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-brand">Top Categories</h2>
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <section className="page-shell py-16">
+          <p className="section-label">Departments</p>
+          <h2 className="mt-2 text-3xl font-black">Top categories</h2>
+          <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {topCategories.map((c) => (
               <Link
                 key={c.slug}
                 href={`/product-category/${c.slug}`}
-                className="group overflow-hidden rounded-xl border border-black/10 bg-surface"
+                className="glass group grid grid-cols-[1fr_7rem] items-center overflow-hidden rounded-2xl p-5 transition hover:border-primary/50"
               >
-                <div className="relative aspect-[6/5] w-full">
+                <div>
+                  <Tag className="size-5 text-primary" />
+                  <h3 className="mt-8 text-lg font-bold">{c.name}</h3>
+                  {typeof c.count === "number" && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {c.count} catalogue item{c.count === 1 ? "" : "s"}
+                    </p>
+                  )}
+                </div>
+                <div className="relative aspect-square w-full">
                   {c.image && (
                     <Image
                       src={c.image.sourceUrl}
-                      alt={c.name}
+                      alt=""
                       fill
-                      sizes="(max-width: 768px) 100vw, 400px"
-                      className="object-cover transition group-hover:scale-105"
+                      sizes="112px"
+                      className="object-contain transition group-hover:scale-105"
                     />
                   )}
-                </div>
-                <div className="p-3 text-center">
-                  <span className="text-sm font-semibold text-brand">{c.name}</span>
                 </div>
               </Link>
             ))}
@@ -336,10 +297,10 @@ export default async function Home() {
 
       {/* Mid banner */}
       {midBannerProduct && (
-        <section className="bg-ink py-14">
-          <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 text-center sm:px-6 lg:flex-row lg:text-left lg:px-8">
+        <section className="page-shell py-16">
+          <div className="glass-strong grid items-center gap-8 rounded-2xl p-6 sm:p-10 lg:grid-cols-[18rem_1fr]">
             {midBannerProduct.image && (
-              <div className="relative aspect-square w-full max-w-xs shrink-0">
+              <div className="relative mx-auto aspect-square w-full max-w-xs">
                 <Image
                   src={midBannerProduct.image.sourceUrl}
                   alt={midBannerProduct.image.altText || midBannerProduct.name}
@@ -349,15 +310,11 @@ export default async function Home() {
                 />
               </div>
             )}
-            <div>
-              <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
-                {midBannerProduct.name}
-              </h2>
-              <Link
-                href={`/product/${midBannerProduct.slug}`}
-                className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-              >
-                Shop Now
+            <div className="text-center lg:text-left">
+              <p className="section-label">Featured line</p>
+              <h2 className="mt-2 text-3xl font-black sm:text-4xl">{midBannerProduct.name}</h2>
+              <Link href={`/product/${midBannerProduct.slug}`} className="btn btn-primary mt-6">
+                Shop now <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
@@ -366,9 +323,9 @@ export default async function Home() {
 
       {/* Top Products */}
       {topProducts.length > 0 && (
-        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-brand">Top Products</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <section className="page-shell py-16">
+          <Heading label="Catalogue" title="Top products" href="/shop" />
+          <div className="product-grid mt-7">
             {topProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
@@ -377,35 +334,38 @@ export default async function Home() {
       )}
 
       {/* Top Brands */}
-      <section className="bg-cream py-14">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-brand">Top Brands</h2>
-          <p className="mx-auto mt-2 max-w-xl text-center text-sm text-muted">
-            The trusted names our wholesale customers stock again and again.
-          </p>
-          <div className="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5">
+      <section className="page-shell py-16">
+        <div className="glass-strong rounded-2xl p-6 sm:p-10">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <p className="section-label">Brands</p>
+              <h2 className="mt-2 text-3xl font-black">Names on our shelves</h2>
+              <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+                The trusted names our wholesale customers stock again and again.
+              </p>
+            </div>
+            <Link href="/brands" className="text-sm font-semibold text-primary">
+              All brands
+            </Link>
+          </div>
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {TOP_BRANDS.map((b) => (
               <Link
                 key={b.slug}
                 href={`/brand/${b.slug}`}
-                className="group flex flex-col items-center gap-3 rounded-2xl border border-black/10 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-brand/30 hover:shadow-lg"
+                className="rounded-xl border border-border bg-foreground/5 p-4 text-center transition hover:border-primary/50"
               >
-                <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-cream ring-1 ring-black/5 transition group-hover:ring-brand/30">
-                  <div className="relative h-14 w-20">
-                    <Image src={b.logo} alt={b.name} fill sizes="140px" className="object-contain" />
-                  </div>
+                <div className="relative mx-auto h-24 w-full max-w-40 rounded-lg bg-white">
+                  <Image src={b.logo} alt="" fill sizes="160px" className="object-contain p-2" />
                 </div>
-                <span className="text-center text-sm font-semibold text-neutral-900 transition group-hover:text-brand">
-                  {b.name}
-                </span>
+                <h3 className="mt-3 text-sm font-bold">{b.name}</h3>
               </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Prices That Satisfies You + Reliable Company: one continuous
-          section sharing the same smoke.mp4 background */}
+      {/* Prices + Reliable Company, sharing one smoke video background */}
       <section className="relative overflow-hidden py-20">
         <video
           autoPlay
@@ -417,46 +377,33 @@ export default async function Home() {
         >
           <source src="/assets/videos/smoke.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-ink/20" />
 
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="page-shell relative">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-white sm:text-3xl">
-              Prices That Satisfies You
-            </h2>
-            <p className="mt-3 text-white/80">Have a question about our service?</p>
-            <Link
-              href="/contact-us"
-              className="mt-6 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-              Contact Us
+            <p className="section-label !text-white drop-shadow">Wholesale pricing</p>
+            <h2 className="mt-2 text-3xl font-black drop-shadow-lg">Prices that satisfy you</h2>
+            <p className="mt-3 font-medium text-white drop-shadow-md">Have a question about our service?</p>
+            <Link href="/contact-us" className="btn btn-primary mt-6">
+              Contact us
             </Link>
           </div>
 
-          <div className="mx-auto mt-16 max-w-4xl border-t border-white/20 pt-16 text-center">
-            <h2 className="text-2xl font-extrabold text-white sm:text-3xl">
-              Reliable Company
-            </h2>
+          <div className="mx-auto mt-16 max-w-4xl border-t border-border pt-16 text-center">
+            <h2 className="text-3xl font-black drop-shadow-lg">Reliable company</h2>
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {RELIABLE_COMPANY_FEATURES.map((f) => (
-                <div
-                  key={f.label}
-                  className="flex flex-col items-center gap-3 rounded-xl border border-white/15 bg-white/10 p-5 text-center backdrop-blur-sm transition hover:border-brand/60 hover:bg-white/15"
-                >
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
-                    <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={1.75}>
+                <div key={f.label} className="flex flex-col border border-white/25 bg-white/15 backdrop-blur-sm items-center gap-3 rounded-xl p-5 text-center">
+                  <span className="grid size-12 place-items-center rounded-full bg-primary text-primary-foreground">
+                    <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={1.75}>
                       <path strokeLinecap="round" strokeLinejoin="round" d={f.path} />
                     </svg>
                   </span>
-                  <span className="text-sm font-semibold text-white">{f.label}</span>
+                  <span className="text-sm font-semibold">{f.label}</span>
                 </div>
               ))}
             </div>
-            <Link
-              href="/about-us"
-              className="mt-10 inline-block rounded-md bg-brand px-6 py-3 text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-              Get Started
+            <Link href="/about-us" className="btn btn-primary mt-10">
+              Get started
             </Link>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import ProductCard from "@/components/ProductCard";
-import { getCategoryBySlug, getProductsByCategory } from "@/lib/catalog";
+import CatalogPage, { parsePage } from "@/components/CatalogPage";
+import { getAllCategories, getCategoryBySlug, getProductsByCategory } from "@/lib/catalog";
 
 export async function generateMetadata({
   params,
@@ -19,32 +19,28 @@ export async function generateMetadata({
 
 export default async function CategoryPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
   const { slug } = await params;
+  const { page } = await searchParams;
   const category = await getCategoryBySlug(slug);
   if (!category) notFound();
 
-  const items = await getProductsByCategory(slug);
+  const [items, categories] = await Promise.all([getProductsByCategory(slug), getAllCategories()]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">
-        {category.name} <span className="text-muted">({items.length})</span>
-      </h1>
-
-      {items.length === 0 ? (
-        <p className="mt-10 text-muted">
-          No published products are currently listed in this category.
-        </p>
-      ) : (
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-          {items.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
-        </div>
-      )}
-    </div>
+    <CatalogPage
+      eyebrow="Category"
+      title={category.name}
+      description={`Browse all products currently listed in ${category.name}.`}
+      items={items}
+      categories={categories}
+      basePath={`/product-category/${slug}`}
+      page={parsePage(page)}
+      emptyMessage="No published products are currently listed in this category."
+    />
   );
 }

@@ -21,7 +21,7 @@ export default async function AdminProductsPage({
       header: "",
       className: "w-16",
       render: (p) => (
-        <div className="relative h-12 w-12 overflow-hidden rounded bg-cream">
+        <div className="relative h-12 w-12 overflow-hidden rounded bg-foreground/5">
           {p.images[0] && (
             <Image src={p.images[0].src} alt={p.name} fill sizes="48px" className="object-contain" />
           )}
@@ -33,10 +33,10 @@ export default async function AdminProductsPage({
       header: "Name",
       render: (p) => (
         <div>
-          <Link href={`/admin/products/${p.id}`} className="font-semibold text-brand hover:underline">
+          <Link href={`/admin/products/${p.id}`} className="font-semibold text-primary hover:underline">
             {p.name}
           </Link>
-          <p className="text-xs text-muted">{p.type}</p>
+          <p className="text-xs text-muted-foreground">{p.type}</p>
         </div>
       ),
     },
@@ -51,8 +51,8 @@ export default async function AdminProductsPage({
       header: "Stock",
       render: (p) => (
         <span
-          className={`rounded px-2 py-1 text-xs font-bold uppercase text-white ${
-            p.stock_status === "instock" ? "bg-success" : "bg-ink"
+          className={`rounded px-2 py-1 text-xs font-bold uppercase ${
+            p.stock_status === "instock" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
           }`}
         >
           {p.stock_status === "instock" ? "In Stock" : "Out of Stock"}
@@ -62,17 +62,17 @@ export default async function AdminProductsPage({
     {
       key: "status",
       header: "Status",
-      render: (p) => <span className="capitalize text-muted">{p.status}</span>,
+      render: (p) => <span className="capitalize text-muted-foreground">{p.status}</span>,
     },
     {
       key: "actions",
       header: "Actions",
       render: (p) => (
         <div className="flex items-center gap-3">
-          <Link href={`/admin/products/${p.id}`} className="text-sm font-semibold text-ink hover:underline">
+          <Link href={`/admin/products/${p.id}`} className="text-sm font-semibold text-foreground hover:underline">
             View
           </Link>
-          <Link href={`/admin/products/${p.id}/edit`} className="text-sm font-semibold text-brand hover:underline">
+          <Link href={`/admin/products/${p.id}/edit`} className="text-sm font-semibold text-primary hover:underline">
             Edit
           </Link>
           <DeleteButton action={deleteProductAction.bind(null, p.id)} />
@@ -84,7 +84,7 @@ export default async function AdminProductsPage({
   return (
     <div>
       <AdminHeader title="Products" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <form className="flex gap-2">
             <input
@@ -92,18 +92,18 @@ export default async function AdminProductsPage({
               name="q"
               defaultValue={q}
               placeholder="Search products..."
-              className="w-64 rounded-md border border-black/15 px-3 py-2 text-sm focus:border-brand focus:outline-none"
+              className="field w-64"
             />
             <button
               type="submit"
-              className="rounded-md border border-black/15 px-4 py-2 text-sm font-semibold text-ink hover:bg-cream"
+              className="btn btn-secondary"
             >
               Search
             </button>
           </form>
           <Link
             href="/admin/products/new"
-            className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+            className="btn btn-primary"
           >
             + Add Product
           </Link>

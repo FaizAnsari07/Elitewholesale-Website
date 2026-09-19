@@ -9,11 +9,11 @@ export const metadata: Metadata = {
 export default function RefundReturnsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">
+      <h1 className="text-4xl font-black text-foreground sm:text-5xl">
         Refund and Returns Policy
       </h1>
 
-      <div className="mt-8 max-w-none space-y-4 text-muted [&_a]:text-accent [&_a]:hover:underline [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-brand [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-brand [&_li]:ml-5 [&_li]:list-disc [&_ul]:space-y-1">
+      <div className="mt-8 max-w-none space-y-4 text-muted-foreground [&_a]:text-primary [&_a]:hover:underline [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-bold [&_h2]:text-primary [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-bold [&_h3]:text-primary [&_li]:ml-5 [&_li]:list-disc [&_ul]:space-y-1">
         <h2>Overview</h2>
         <p>
           Our refund and returns policy lasts 30 days. If 30 days have passed

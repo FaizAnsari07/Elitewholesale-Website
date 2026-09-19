@@ -21,22 +21,22 @@ export default async function AdminCategoriesPage({
       header: "",
       className: "w-16",
       render: (c) => (
-        <div className="relative h-12 w-12 overflow-hidden rounded bg-cream">
+        <div className="relative h-12 w-12 overflow-hidden rounded bg-foreground/5">
           {c.image && (
             <Image src={c.image.src} alt={c.name} fill sizes="48px" className="object-cover" />
           )}
         </div>
       ),
     },
-    { key: "name", header: "Name", render: (c) => <span className="font-semibold text-brand">{c.name}</span> },
-    { key: "slug", header: "Slug", render: (c) => <span className="text-muted">{c.slug}</span> },
+    { key: "name", header: "Name", render: (c) => <span className="font-semibold text-primary">{c.name}</span> },
+    { key: "slug", header: "Slug", render: (c) => <span className="text-muted-foreground">{c.slug}</span> },
     { key: "count", header: "Products", render: (c) => c.count },
     {
       key: "actions",
       header: "Actions",
       render: (c) => (
         <div className="flex items-center gap-3">
-          <Link href={`/admin/categories/${c.id}/edit`} className="text-sm font-semibold text-brand hover:underline">
+          <Link href={`/admin/categories/${c.id}/edit`} className="text-sm font-semibold text-primary hover:underline">
             Edit
           </Link>
           <DeleteButton action={deleteCategoryAction.bind(null, c.id)} />
@@ -48,11 +48,11 @@ export default async function AdminCategoriesPage({
   return (
     <div>
       <AdminHeader title="Categories" />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <div className="mb-4 flex justify-end">
           <Link
             href="/admin/categories/new"
-            className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
+            className="btn btn-primary"
           >
             + Add Category
           </Link>

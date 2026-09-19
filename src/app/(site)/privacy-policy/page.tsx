@@ -9,13 +9,13 @@ export const metadata: Metadata = {
 export default function PrivacyPolicyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">Privacy Policy</h1>
+      <h1 className="text-4xl font-black text-foreground sm:text-5xl">Privacy Policy</h1>
 
-      <div className="prose-neutral mt-8 max-w-none space-y-4 text-muted">
-        <h2 className="text-xl font-bold text-brand">Who we are</h2>
+      <div className="prose-neutral mt-8 max-w-none space-y-4 text-muted-foreground">
+        <h2 className="font-display text-2xl font-bold text-foreground">Who we are</h2>
         <p>Our website address is: {siteConfig.domain}.</p>
 
-        <h2 className="text-xl font-bold text-brand">Comments</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Comments</h2>
         <p>
           When visitors leave comments on the site we collect the data shown
           in the comments form, and also the visitor&rsquo;s IP address and
@@ -32,7 +32,7 @@ export default function PrivacyPolicyPage() {
           to the public in the context of your comment.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">Media</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Media</h2>
         <p>
           If you upload images to the website, you should avoid uploading
           images with embedded location data (EXIF GPS) included. Visitors
@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
           images on the website.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">Cookies</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Cookies</h2>
         <p>
           If you leave a comment on our site you may opt-in to saving your
           name, email address and website in cookies. These are for your
@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
           expires after 1 day.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">
+        <h2 className="font-display text-2xl font-bold text-foreground">
           Embedded content from other websites
         </h2>
         <p>
@@ -85,13 +85,13 @@ export default function PrivacyPolicyPage() {
           website.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">Who we share your data with</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Who we share your data with</h2>
         <p>
           If you request a password reset, your IP address will be included
           in the reset email.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">How long we retain your data</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">How long we retain your data</h2>
         <p>
           If you leave a comment, the comment and its metadata are retained
           indefinitely. This is so we can recognize and approve any
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
           can also see and edit that information.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">What rights you have over your data</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">What rights you have over your data</h2>
         <p>
           If you have an account on this site, or have left comments, you
           can request to receive an exported file of the personal data we
@@ -116,13 +116,13 @@ export default function PrivacyPolicyPage() {
           administrative, legal, or security purposes.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">Where your data is sent</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Where your data is sent</h2>
         <p>
           Visitor comments may be checked through an automated spam
           detection service.
         </p>
 
-        <h2 className="text-xl font-bold text-brand">Contact information</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Contact information</h2>
         <p>
           Questions about this policy can be sent to{" "}
           <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>.

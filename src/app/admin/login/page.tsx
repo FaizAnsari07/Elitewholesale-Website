@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { LockKeyhole } from "lucide-react";
 import { loginAction } from "@/app/admin/actions";
 
 export default async function AdminLoginPage({
@@ -9,77 +10,42 @@ export default async function AdminLoginPage({
   const { from = "/admin", error } = await searchParams;
 
   return (
-    <div className="flex min-h-screen">
-      <div className="relative hidden w-1/2 lg:block">
-        <Image
-          src="/images/admin-login-bg.png"
-          alt="Elite Wholesale"
-          fill
-          priority
-          sizes="50vw"
-          className="object-cover"
-        />
-      </div>
+    <div className="relative grid min-h-screen place-items-center p-4">
+      <Image
+        src="/images/admin-login-bg.png"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="-z-10 object-cover opacity-10"
+      />
+      <div className="glass-strong w-full max-w-sm rounded-2xl p-7">
+        <LockKeyhole className="size-9 text-primary" />
+        <h1 className="mt-5 text-2xl font-black">Admin access</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Sign in to manage products, categories, brands, and site settings.
+        </p>
 
-      <div className="flex w-full items-center justify-center bg-white px-4 py-16 lg:w-1/2">
-        <div className="w-full max-w-sm">
-          <div className="flex justify-center lg:hidden">
-            <Image
-              src="/images/elite-wholesale-logo.png"
-              alt="Elite Wholesale"
-              width={180}
-              height={83}
-              className="h-12 w-auto"
-            />
-          </div>
-
-          <h1 className="mt-6 text-center text-2xl font-extrabold text-brand lg:text-left">
-            Admin Login
-          </h1>
-          <p className="mt-2 text-center text-sm text-muted lg:text-left">
-            Sign in to manage products, categories, brands, and site settings.
+        {error && (
+          <p className="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-center text-sm font-medium text-destructive">
+            Invalid username or password.
           </p>
+        )}
 
-          {error && (
-            <p className="mt-4 rounded-md bg-accent/10 px-3 py-2 text-center text-sm font-medium text-accent">
-              Invalid username or password.
-            </p>
-          )}
-
-          <form action={loginAction} className="mt-8 space-y-4">
-            <input type="hidden" name="from" value={from} />
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Username
-              </label>
-              <input
-                required
-                type="text"
-                name="username"
-                autoComplete="username"
-                className="mt-1 w-full rounded-md border border-black/15 px-3 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15"
-              />
-            </div>
-            <div>
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted">
-                Password
-              </label>
-              <input
-                required
-                type="password"
-                name="password"
-                autoComplete="current-password"
-                className="mt-1 w-full rounded-md border border-black/15 px-3 py-2.5 text-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full rounded-md bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
-            >
-              Log In
-            </button>
-          </form>
-        </div>
+        <form action={loginAction} className="mt-6 grid gap-4">
+          <input type="hidden" name="from" value={from} />
+          <label>
+            <span className="label">Username</span>
+            <input required type="text" name="username" autoComplete="username" className="field" />
+          </label>
+          <label>
+            <span className="label">Password</span>
+            <input required type="password" name="password" autoComplete="current-password" className="field" />
+          </label>
+          <button type="submit" className="btn btn-primary">
+            Sign in
+          </button>
+        </form>
       </div>
     </div>
   );

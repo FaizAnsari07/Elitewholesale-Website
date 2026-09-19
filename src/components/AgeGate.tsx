@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import { ShieldCheck } from "lucide-react";
 
 const STORAGE_KEY = "elite-wholesale-age-verified";
 
@@ -38,25 +39,20 @@ export default function AgeGate() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl">
-        <h2 className="text-xl font-bold text-brand">Age Verification</h2>
-        <p className="mt-3 text-sm text-muted">
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-background/90 p-4 backdrop-blur-xl">
+      <div className="glass-strong w-full max-w-md rounded-2xl p-8 text-center">
+        <ShieldCheck className="mx-auto size-10 text-primary" />
+        <p className="section-label mt-5">Restricted catalogue</p>
+        <h2 className="mt-2 text-2xl font-black">Age verification</h2>
+        <p className="mt-3 text-sm leading-6 text-muted-foreground">
           This website sells vape, tobacco-related, and smoke shop products.
-          You must be 21 years of age or older to enter this site.
+          You must be 21 years of age or older to enter.
         </p>
-        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <button
-            type="button"
-            onClick={confirmAge}
-            className="rounded-md bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
-          >
+        <div className="mt-7 grid gap-3 sm:grid-cols-2">
+          <button type="button" onClick={confirmAge} className="btn btn-primary">
             I am 21 or older
           </button>
-          <a
-            href="https://www.google.com"
-            className="rounded-md border border-neutral-300 px-6 py-2.5 text-sm font-semibold text-neutral-700 hover:bg-neutral-50"
-          >
+          <a className="btn btn-secondary" href="https://www.google.com">
             Leave site
           </a>
         </div>

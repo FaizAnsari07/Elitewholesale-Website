@@ -21,7 +21,7 @@ export default async function EditProductPage({
   return (
     <div>
       <AdminHeader title={`Edit: ${product.name}`} />
-      <div className="p-6">
+      <div className="p-4 sm:p-7">
         <ProductForm
           action={updateProductAction.bind(null, productId)}
           product={product}

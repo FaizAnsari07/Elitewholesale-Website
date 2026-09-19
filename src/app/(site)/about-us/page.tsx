@@ -19,11 +19,12 @@ const partnerBrands = [
 
 export default function AboutUsPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-extrabold text-brand sm:text-4xl">About Us</h1>
+    <div className="page-shell py-12">
+      <p className="section-label">About us</p>
+      <h1 className="mt-3 text-4xl font-black text-foreground sm:text-5xl">Built for independent retail</h1>
 
       <div className="mt-10 grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_320px]">
-        <div className="space-y-5 text-muted">
+        <div className="space-y-5 text-muted-foreground">
           <p>
             Established in 2024, Elite Wholesale is a premier wholesaler
             located in Portland, Oregon, focused on providing a wide range of
@@ -56,7 +57,7 @@ export default function AboutUsPage() {
       </div>
 
       <div className="mt-16">
-        <h2 className="text-center text-sm font-semibold uppercase tracking-wide text-accent">
+        <h2 className="section-label text-center">
           Brands We Carry
         </h2>
         <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
@@ -64,9 +65,9 @@ export default function AboutUsPage() {
             <a
               key={b.slug}
               href={`/brand/${b.slug}`}
-              className="flex items-center justify-center rounded-lg border border-black/10 bg-surface p-4"
+              className="group flex items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white to-slate-100 p-5 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_oklch(0.81_0.14_210/50%)]"
             >
-              <div className="relative h-16 w-full">
+              <div className="relative h-16 w-full transition duration-300 group-hover:scale-105">
                 <Image src={b.logo} alt={b.name} fill sizes="180px" className="object-contain" />
               </div>
             </a>

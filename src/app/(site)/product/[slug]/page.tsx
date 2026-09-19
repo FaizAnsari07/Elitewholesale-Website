@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { CheckCircle2, ChevronRight, ShieldCheck, Truck } from "lucide-react";
 import ProductGallery from "@/components/ProductGallery";
 import ProductCard from "@/components/ProductCard";
 import ProductEnquirySelector, {
@@ -23,14 +24,6 @@ export async function generateMetadata({
       product.shortDescription?.replace(/<[^>]+>/g, "") ||
       `${product.name} — wholesale pricing available at Elite Wholesale.`,
   };
-}
-
-function Chevron() {
-  return (
-    <svg viewBox="0 0 24 24" className="mx-1.5 inline h-3 w-3 text-black/25" fill="currentColor">
-      <path d="M9.29 6.71a1 1 0 000 1.41L13.17 12l-3.88 3.88a1 1 0 101.41 1.41l4.59-4.59a1 1 0 000-1.41L10.7 6.71a1 1 0 00-1.41 0z" />
-    </svg>
-  );
 }
 
 export default async function ProductPage({
@@ -61,90 +54,78 @@ export default async function ProductPage({
     : [];
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-      <nav className="mb-6 flex items-center text-sm text-muted">
-        <Link href="/shop" className="hover:text-accent">
-          Shop
-        </Link>
+    <div className="page-shell py-8">
+      <nav className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+        <Link href="/shop" className="hover:text-primary">Shop</Link>
         {categories[0] && (
           <>
-            <Chevron />
-            <Link href={`/product-category/${categories[0].slug}`} className="hover:text-accent">
+            <ChevronRight className="size-3" />
+            <Link href={`/product-category/${categories[0].slug}`} className="hover:text-primary">
               {categories[0].name}
             </Link>
           </>
         )}
-        <Chevron />
-        <span className="truncate text-ink">{product.name}</span>
+        <ChevronRight className="size-3" />
+        <span className="truncate text-foreground">{product.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+      <div className="mt-7 grid gap-8 lg:grid-cols-2">
         <ProductGallery images={images} title={product.name} />
 
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            {isNew && (
-              <span className="rounded bg-success px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                New
-              </span>
-            )}
-            <span
-              className={`rounded px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white ${
-                inStock ? "bg-success" : "bg-ink"
-              }`}
-            >
-              {inStock ? "In Stock" : "Out of Stock"}
-            </span>
-          </div>
-
+        <section className="py-2 lg:py-8">
           {brands[0] && (
-            <Link
-              href={`/brand/${brands[0].slug}`}
-              className="mt-3 inline-block text-xs font-semibold uppercase tracking-wide text-accent"
-            >
+            <Link href={`/brand/${brands[0].slug}`} className="section-label">
               {brands[0].name}
+              {categories[0] ? ` · ${categories[0].name}` : ""}
             </Link>
           )}
-          <h1 className="mt-2 text-2xl font-extrabold leading-tight text-brand sm:text-3xl">
-            {product.name}
-          </h1>
+          <h1 className="mt-3 max-w-2xl text-4xl font-black leading-tight sm:text-5xl">{product.name}</h1>
 
-          <p className="mt-4 flex items-center gap-2 rounded-md border border-brand/15 bg-cream px-4 py-3 text-sm font-semibold text-brand">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-              />
-            </svg>
-            {WHOLESALE_PRICE_LABEL}
-          </p>
+          <div className="mt-5 flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-bold ${
+                inStock ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
+              }`}
+            >
+              <CheckCircle2 className="size-4" />
+              {inStock ? "In Stock" : "Out of Stock"}
+            </span>
+            {isNew && (
+              <span className="rounded-lg bg-primary/10 px-3 py-2 text-xs font-bold uppercase text-primary">New</span>
+            )}
+          </div>
 
-          {(product.sku || categories.length > 0) && (
-            <dl className="mt-5 space-y-2 rounded-lg border border-black/10 bg-white p-4 text-sm text-muted">
-              {product.sku && (
-                <div className="flex gap-2">
-                  <dt className="font-semibold text-ink">SKU:</dt>
-                  <dd>{product.sku}</dd>
-                </div>
-              )}
-              {categories.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  <dt className="font-semibold text-ink">Category:</dt>
-                  <dd>
-                    {categories.map((c, i) => (
-                      <span key={c.slug}>
-                        <Link href={`/product-category/${c.slug}`} className="hover:text-accent">
-                          {c.name}
-                        </Link>
-                        {i < categories.length - 1 ? ", " : ""}
-                      </span>
-                    ))}
-                  </dd>
-                </div>
-              )}
-            </dl>
-          )}
+          <div className="mt-8 border-y border-border py-7">
+            <p className="text-xl font-bold">{WHOLESALE_PRICE_LABEL}</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Select available options and quantities, then add this product to your enquiry.
+            </p>
+            {(product.sku || categories.length > 0) && (
+              <dl className="mt-5 grid gap-2 text-sm text-muted-foreground">
+                {product.sku && (
+                  <div className="flex gap-2">
+                    <dt className="font-semibold text-foreground">SKU:</dt>
+                    <dd>{product.sku}</dd>
+                  </div>
+                )}
+                {categories.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    <dt className="font-semibold text-foreground">Category:</dt>
+                    <dd>
+                      {categories.map((c, i) => (
+                        <span key={c.slug}>
+                          <Link href={`/product-category/${c.slug}`} className="hover:text-primary">
+                            {c.name}
+                          </Link>
+                          {i < categories.length - 1 ? ", " : ""}
+                        </span>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            )}
+          </div>
 
           {isVariable ? (
             <ProductEnquirySelector
@@ -162,31 +143,36 @@ export default async function ProductPage({
             />
           )}
 
+          <div className="mt-8 grid grid-cols-2 gap-3">
+            <div className="glass rounded-xl p-4">
+              <Truck className="size-5 text-primary" />
+              <p className="mt-2 text-sm font-bold">Wholesale delivery</p>
+            </div>
+            <div className="glass rounded-xl p-4">
+              <ShieldCheck className="size-5 text-primary" />
+              <p className="mt-2 text-sm font-bold">Authentic products</p>
+            </div>
+          </div>
+
           {product.description && (
             <div
-              className="mt-10 max-w-none border-t border-black/10 pt-8 text-sm leading-relaxed text-muted [&_h2]:mt-4 [&_h2]:text-base [&_h2]:font-bold [&_h2]:text-brand [&_h3]:mt-4 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-brand"
+              className="mt-10 max-w-none border-t border-border pt-8 text-sm leading-7 text-muted-foreground [&_h2]:mt-4 [&_h2]:font-display [&_h2]:text-lg [&_h2]:font-bold [&_h2]:text-foreground [&_h3]:mt-4 [&_h3]:font-display [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-foreground [&_p]:mt-3"
               dangerouslySetInnerHTML={{ __html: product.description }}
             />
           )}
-        </div>
+        </section>
       </div>
 
       {relatedProducts.length > 0 && (
-        <div className="mt-16 border-t border-black/10 pt-10">
-          <div className="flex items-center text-xs font-semibold uppercase tracking-wide text-muted">
-            <Link href="/shop" className="hover:text-accent">
-              Shop
-            </Link>
-            <Chevron />
-            <span className="text-ink">{categories[0]?.name}</span>
-          </div>
-          <h2 className="mt-2 text-2xl font-extrabold text-brand">Related Products</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <section className="py-20">
+          <p className="section-label">More to explore</p>
+          <h2 className="mt-2 text-3xl font-black">Related products</h2>
+          <div className="product-grid mt-7">
             {relatedProducts.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
