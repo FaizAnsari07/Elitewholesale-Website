@@ -1,0 +1,46 @@
+name: elitewholesale-backend
+
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: catalog
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      # Runs only on first boot of an empty volume: creates the schema and loads the catalog.
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: catalog
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_KEY: ${CATALOG_API_KEY}
+      PUBLIC_URL: ${PUBLIC_URL}
+    volumes:
+      # Live-edit PHP during development; uploads persist on the host.
+      - ./lib:/var/www/lib:ro
+      - ./public:/var/www/public
+    ports:
+      - "8080:80"
+
+volumes:
+  db_data:
