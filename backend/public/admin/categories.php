@@ -1,4 +1,8 @@
 <?php
+// Admin categories API (X-Api-Key required).
+// GET ?  -> AdminTerm[] | GET ?id=N -> AdminTerm | POST -> AdminTerm (201)
+// PUT ?id=N -> AdminTerm | DELETE ?id=N -> { deleted: true }
+// JSON body: name (required), description, image_url (optional; when omitted on update the current image is kept)
 require __DIR__ . '/../../lib/config.php';
 require_api_key();
 
@@ -6,7 +10,7 @@ $pdo = db();
 $method = $_SERVER['REQUEST_METHOD'];
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 
-function format_category_term(PDO $pdo, array $row): array {
+function format_term(PDO $pdo, array $row): array {
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM product_categories WHERE category_id = ?");
     $stmt->execute([$row['id']]);
     return [
@@ -19,40 +23,42 @@ function format_category_term(PDO $pdo, array $row): array {
     ];
 }
 
-if ($method === 'GET' && $id) {
+function load_term(PDO $pdo, int $id): ?array {
     $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
     $stmt->execute([$id]);
     $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+if ($method === 'GET' && $id) {
+    $row = load_term($pdo, $id);
     if (!$row) json_out(['message' => 'Not found'], 404);
-    json_out(format_category_term($pdo, $row));
+    json_out(format_term($pdo, $row));
 }
 
 if ($method === 'GET') {
     $rows = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
-    json_out(array_map(fn($r) => format_category_term($pdo, $r), $rows));
+    json_out(array_map(fn($r) => format_term($pdo, $r), $rows));
 }
 
 if ($method === 'POST') {
     $body = json_body();
-    $name = (string)($body['name'] ?? '');
-    $slug = slugify($name) . '-' . substr(md5((string)microtime(true)), 0, 6);
-    $pdo->prepare("INSERT INTO categories (name, slug, description) VALUES (?, ?, ?)")
-        ->execute([$name, $slug, $body['description'] ?? '']);
-    $newId = (int)$pdo->lastInsertId();
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
-    $stmt->execute([$newId]);
-    json_out(format_category_term($pdo, $stmt->fetch()), 201);
+    $name = trim((string)($body['name'] ?? ''));
+    if ($name === '') json_out(['message' => 'Name is required'], 422);
+    $pdo->prepare("INSERT INTO categories (name, slug, description, image_url) VALUES (?, ?, ?, ?)")
+        ->execute([$name, unique_term_slug($pdo, 'categories', $name), $body['description'] ?? '', $body['image_url'] ?? null]);
+    json_out(format_term($pdo, load_term($pdo, (int)$pdo->lastInsertId())), 201);
 }
 
 if ($method === 'PUT' && $id) {
+    if (!load_term($pdo, $id)) json_out(['message' => 'Not found'], 404);
     $body = json_body();
-    $pdo->prepare("UPDATE categories SET name = ?, description = ? WHERE id = ?")
-        ->execute([$body['name'] ?? '', $body['description'] ?? '', $id]);
-    $stmt = $pdo->prepare("SELECT * FROM categories WHERE id = ?");
-    $stmt->execute([$id]);
-    $row = $stmt->fetch();
-    if (!$row) json_out(['message' => 'Not found'], 404);
-    json_out(format_category_term($pdo, $row));
+    $name = trim((string)($body['name'] ?? ''));
+    if ($name === '') json_out(['message' => 'Name is required'], 422);
+    // The slug is kept on rename so existing links and URLs keep working.
+    $pdo->prepare("UPDATE categories SET name = ?, description = ?, image_url = COALESCE(?, image_url) WHERE id = ?")
+        ->execute([$name, $body['description'] ?? '', $body['image_url'] ?? null, $id]);
+    json_out(format_term($pdo, load_term($pdo, $id)));
 }
 
 if ($method === 'DELETE' && $id) {

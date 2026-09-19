@@ -56,3 +56,14 @@ function json_body(): array {
 function slugify(string $name): string {
     return trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($name)) ?? '', '-');
 }
+
+function unique_term_slug(PDO $pdo, string $table, string $name): string {
+    $base = slugify($name) ?: 'item';
+    $slug = $base;
+    for ($n = 2; ; $n++) {
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM $table WHERE slug = ?");
+        $stmt->execute([$slug]);
+        if ((int)$stmt->fetchColumn() === 0) return $slug;
+        $slug = $base . '-' . $n;
+    }
+}

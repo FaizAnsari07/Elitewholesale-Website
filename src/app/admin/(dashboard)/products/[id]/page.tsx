@@ -82,6 +82,24 @@ export default async function ProductViewPage({
               />
             )}
 
+            {product.variations.length > 0 && (
+              <div className="mt-6">
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  Flavors / Options ({product.variations.length})
+                </h3>
+                <ul className="mt-2 max-h-72 divide-y divide-black/5 overflow-y-auto rounded-lg border border-black/10 text-sm">
+                  {product.variations.map((v) => (
+                    <li key={v.id} className="flex items-center justify-between gap-3 px-3 py-2">
+                      <span className="truncate text-ink">{v.label}</span>
+                      <span className={`text-xs font-semibold uppercase ${v.stock_status === "instock" ? "text-success" : "text-accent"}`}>
+                        {v.stock_status === "instock" ? "In Stock" : "Out of Stock"}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             <div className="mt-6 flex items-center gap-4">
               <Link
                 href={`/admin/products/${product.id}/edit`}

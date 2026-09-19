@@ -3,7 +3,7 @@ import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import DeleteButton from "@/components/admin/DeleteButton";
-import { listProducts, type WcProduct } from "@/lib/admin-api";
+import { listProducts, type AdminProduct } from "@/lib/admin-api";
 import { deleteProductAction } from "@/app/admin/actions";
 
 export default async function AdminProductsPage({
@@ -15,7 +15,7 @@ export default async function AdminProductsPage({
   const currentPage = Math.max(1, Number(page) || 1);
   const products = await listProducts({ search: q });
 
-  const columns: DataTableColumn<WcProduct>[] = [
+  const columns: DataTableColumn<AdminProduct>[] = [
     {
       key: "image",
       header: "",

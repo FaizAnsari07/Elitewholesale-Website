@@ -40,41 +40,55 @@ async function apiFetch<T>(
 
 // ---- Products ----
 
-export type WcProduct = {
+export type AdminVariation = {
+  id?: number;
+  label: string;
+  stock_status: "instock" | "outofstock";
+};
+
+export type AdminProduct = {
   id: number;
   name: string;
   slug: string;
-  type: "simple" | "variable" | "grouped" | "external";
-  status: "publish" | "draft" | "pending" | "private";
+  type: "simple" | "variable";
+  status: "publish" | "draft";
   sku: string;
   regular_price: string;
-  sale_price: string;
-  price: string;
-  stock_status: "instock" | "outofstock" | "onbackorder";
+  stock_status: "instock" | "outofstock";
   description: string;
   short_description: string;
   categories: { id: number; name: string; slug: string }[];
-  brands?: { id: number; name: string; slug: string }[];
+  brands: { id: number; name: string; slug: string }[];
+  variations: AdminVariation[];
   images: { id: number; src: string; alt: string }[];
   date_created: string;
 };
 
-export function listProducts(params: { search?: string } = {}): Promise<WcProduct[]> {
-  return apiFetch<WcProduct[]>("/admin/products.php", {
+// Fields accepted when creating or updating a product.
+export type ProductInput = Partial<
+  Omit<AdminProduct, "id" | "slug" | "type" | "categories" | "brands" | "images" | "date_created">
+> & {
+  image_url?: string;
+  categories?: { id: number }[];
+  brands?: { id: number }[];
+};
+
+export function listProducts(params: { search?: string } = {}): Promise<AdminProduct[]> {
+  return apiFetch<AdminProduct[]>("/admin/products.php", {
     searchParams: params.search ? { search: params.search } : {},
   });
 }
 
 export function getProduct(id: number) {
-  return apiFetch<WcProduct>("/admin/products.php", { searchParams: { id: String(id) } });
+  return apiFetch<AdminProduct>("/admin/products.php", { searchParams: { id: String(id) } });
 }
 
-export function createProduct(data: Partial<WcProduct>) {
-  return apiFetch<WcProduct>("/admin/products.php", { method: "POST", body: data });
+export function createProduct(data: ProductInput) {
+  return apiFetch<AdminProduct>("/admin/products.php", { method: "POST", body: data });
 }
 
-export function updateProduct(id: number, data: Partial<WcProduct>) {
-  return apiFetch<WcProduct>("/admin/products.php", {
+export function updateProduct(id: number, data: ProductInput) {
+  return apiFetch<AdminProduct>("/admin/products.php", {
     method: "PUT",
     searchParams: { id: String(id) },
     body: data,
@@ -90,7 +104,7 @@ export function deleteProduct(id: number) {
 
 // ---- Categories ----
 
-export type WcTerm = {
+export type AdminTerm = {
   id: number;
   name: string;
   slug: string;
@@ -100,19 +114,19 @@ export type WcTerm = {
 };
 
 export function listCategories() {
-  return apiFetch<WcTerm[]>("/admin/categories.php");
+  return apiFetch<AdminTerm[]>("/admin/categories.php");
 }
 
 export function getCategory(id: number) {
-  return apiFetch<WcTerm>("/admin/categories.php", { searchParams: { id: String(id) } });
+  return apiFetch<AdminTerm>("/admin/categories.php", { searchParams: { id: String(id) } });
 }
 
-export function createCategory(data: { name: string; description?: string }) {
-  return apiFetch<WcTerm>("/admin/categories.php", { method: "POST", body: data });
+export function createCategory(data: { name: string; description?: string; image_url?: string }) {
+  return apiFetch<AdminTerm>("/admin/categories.php", { method: "POST", body: data });
 }
 
-export function updateCategory(id: number, data: Partial<{ name: string; description: string }>) {
-  return apiFetch<WcTerm>("/admin/categories.php", {
+export function updateCategory(id: number, data: { name: string; description?: string; image_url?: string }) {
+  return apiFetch<AdminTerm>("/admin/categories.php", {
     method: "PUT",
     searchParams: { id: String(id) },
     body: data,
@@ -129,19 +143,19 @@ export function deleteCategory(id: number) {
 // ---- Brands ----
 
 export function listBrands() {
-  return apiFetch<WcTerm[]>("/admin/brands.php");
+  return apiFetch<AdminTerm[]>("/admin/brands.php");
 }
 
 export function getBrand(id: number) {
-  return apiFetch<WcTerm>("/admin/brands.php", { searchParams: { id: String(id) } });
+  return apiFetch<AdminTerm>("/admin/brands.php", { searchParams: { id: String(id) } });
 }
 
 export function createBrand(data: { name: string; description?: string }) {
-  return apiFetch<WcTerm>("/admin/brands.php", { method: "POST", body: data });
+  return apiFetch<AdminTerm>("/admin/brands.php", { method: "POST", body: data });
 }
 
-export function updateBrand(id: number, data: Partial<{ name: string; description: string }>) {
-  return apiFetch<WcTerm>("/admin/brands.php", {
+export function updateBrand(id: number, data: { name: string; description?: string }) {
+  return apiFetch<AdminTerm>("/admin/brands.php", {
     method: "PUT",
     searchParams: { id: String(id) },
     body: data,

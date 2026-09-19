@@ -19,6 +19,7 @@ export default async function EditCategoryPage({
       <AdminHeader title={`Edit: ${category.name}`} />
       <div className="p-6">
         <TermForm
+          withImage
           action={updateCategoryAction.bind(null, categoryId)}
           term={category}
           submitLabel="Save Changes"

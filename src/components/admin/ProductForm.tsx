@@ -1,15 +1,18 @@
 import Image from "next/image";
-import type { WcProduct, WcTerm } from "@/lib/admin-api";
+import VariationsEditor from "@/components/admin/VariationsEditor";
+import type { AdminProduct, AdminTerm } from "@/lib/admin-api";
 
 export default function ProductForm({
   action,
   product,
   categories,
+  brands,
   submitLabel,
 }: {
   action: (formData: FormData) => Promise<void>;
-  product?: WcProduct;
-  categories: WcTerm[];
+  product?: AdminProduct;
+  categories: AdminTerm[];
+  brands: AdminTerm[];
   submitLabel: string;
 }) {
   const currentImage = product?.images?.[0];
@@ -121,6 +124,22 @@ export default function ProductForm({
       </div>
 
       <div>
+        <label className="text-xs font-semibold uppercase tracking-wide text-muted">Brand</label>
+        <select
+          name="brand_id"
+          defaultValue={product?.brands[0]?.id}
+          className="mt-1 w-full rounded-md border border-black/15 bg-white px-3 py-2 text-sm focus:border-brand focus:outline-none"
+        >
+          <option value="">— None —</option>
+          {brands.map((b) => (
+            <option key={b.id} value={b.id}>
+              {b.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
         <label className="text-xs font-semibold uppercase tracking-wide text-muted">
           Short Description
         </label>
@@ -144,10 +163,7 @@ export default function ProductForm({
         />
       </div>
 
-      <p className="text-xs text-muted">
-        This quick form creates a simple product. Products with multiple
-        flavors/options (variable products) aren&apos;t supported here yet.
-      </p>
+      <VariationsEditor initial={product?.variations ?? []} />
 
       <button
         type="submit"

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
-import { getProduct, listCategories } from "@/lib/admin-api";
+import { getProduct, listBrands, listCategories } from "@/lib/admin-api";
 import { updateProductAction } from "@/app/admin/actions";
 
 export default async function EditProductPage({
@@ -11,9 +11,10 @@ export default async function EditProductPage({
 }) {
   const { id } = await params;
   const productId = Number(id);
-  const [product, categories] = await Promise.all([
+  const [product, categories, brands] = await Promise.all([
     getProduct(productId).catch(() => null),
     listCategories(),
+    listBrands(),
   ]);
   if (!product) notFound();
 
@@ -25,6 +26,7 @@ export default async function EditProductPage({
           action={updateProductAction.bind(null, productId)}
           product={product}
           categories={categories}
+          brands={brands}
           submitLabel="Save Changes"
         />
       </div>

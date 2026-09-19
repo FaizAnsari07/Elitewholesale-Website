@@ -2,7 +2,7 @@ import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import DeleteButton from "@/components/admin/DeleteButton";
-import { listBrands, type WcTerm } from "@/lib/admin-api";
+import { listBrands, type AdminTerm } from "@/lib/admin-api";
 import { deleteBrandAction } from "@/app/admin/actions";
 
 export default async function AdminBrandsPage({
@@ -14,7 +14,7 @@ export default async function AdminBrandsPage({
   const currentPage = Math.max(1, Number(page) || 1);
   const brands = await listBrands();
 
-  const columns: DataTableColumn<WcTerm>[] = [
+  const columns: DataTableColumn<AdminTerm>[] = [
     { key: "name", header: "Name", render: (b) => <span className="font-semibold text-brand">{b.name}</span> },
     { key: "slug", header: "Slug", render: (b) => <span className="text-muted">{b.slug}</span> },
     { key: "count", header: "Products", render: (b) => b.count },
