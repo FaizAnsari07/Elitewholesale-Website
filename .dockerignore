@@ -8,3 +8,7 @@ data
 .env*
 !.env.example
 *.md
+
+# WordPress migration backups: never send to the Docker build or a server
+*.wpress
+*.sql.gz
