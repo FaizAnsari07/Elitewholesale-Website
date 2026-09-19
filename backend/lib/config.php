@@ -2,6 +2,15 @@
 declare(strict_types=1);
 
 header('Content-Type: application/json');
+header('X-Content-Type-Options: nosniff');
+ini_set('display_errors', '0');
+
+// Never leak stack traces or SQL errors to clients.
+set_exception_handler(function (Throwable $e): void {
+    error_log('[api] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
+    http_response_code(500);
+    echo json_encode(['message' => 'Internal server error']);
+});
 
 function db(): PDO {
     static $pdo = null;
