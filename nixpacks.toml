@@ -1,0 +1,4 @@
+# Dokploy / Nixpacks: Next.js 16 needs Node >= 20.9. Pin Node 22 (same as the Dockerfile).
+# nodejs_22 ships its own npm, so the default npm-9_x package is not needed.
+[phases.setup]
+nixPkgs = ["nodejs_22"]
