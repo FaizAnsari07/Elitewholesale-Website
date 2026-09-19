@@ -27,6 +27,22 @@ In the Next.js project's `.env.local`:
     CATALOG_API_URL=http://localhost:8080
     CATALOG_API_KEY=<same as backend/.env>
 
+## Loading the catalog into a server database
+
+`db/init/01-catalog.sql` (220 products, 55 brands, 13 categories, 1,546 flavors) is loaded **only** when the
+database volume is created empty. If the site is up but shows no products, the volume was probably created
+before the seed was mounted, so load it by hand. **This replaces the catalog tables** (it starts with
+`DROP TABLE IF EXISTS`), so any edits made in the admin panel on that server are lost.
+
+    # 1. Is there data?  (expect 220)
+    docker exec <db-container> sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" -N -e "select count(*) from catalog.products"'
+
+    # 2. If not, load the seed (run where the repo's backend/db/init folder is, e.g. Dokploy's code directory)
+    docker exec -i <db-container> sh -c 'mariadb -uroot -p"$MARIADB_ROOT_PASSWORD"' < db/init/01-catalog.sql
+
+    # 3. Does the API serve it?  (run inside the website container)
+    docker exec <web-container> wget -qO- http://api/products.php | head -c 200
+
 ## Backups
 
     docker compose exec db sh -c 'mysqldump -u root -p"$MARIADB_ROOT_PASSWORD" catalog' > backup.sql
