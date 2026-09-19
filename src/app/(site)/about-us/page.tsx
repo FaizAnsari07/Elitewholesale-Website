@@ -56,16 +56,15 @@ export default function AboutUsPage() {
         </div>
       </div>
 
-      <div className="mt-16">
-        <h2 className="section-label text-center">
-          Brands We Carry
-        </h2>
-        <div className="mt-6 grid grid-cols-2 gap-6 sm:grid-cols-4">
+      <div className="glass-strong mt-16 rounded-3xl p-6 sm:p-10">
+        <p className="section-label text-center">Trusted partners</p>
+        <h2 className="mt-2 text-center font-display text-3xl font-black">Brands we carry</h2>
+        <div className="mt-8 flex flex-wrap justify-center gap-5">
           {partnerBrands.map((b) => (
             <a
               key={b.slug}
               href={`/brand/${b.slug}`}
-              className="group flex items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white to-slate-100 p-5 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_oklch(0.81_0.14_210/50%)]"
+              className="group flex w-[calc(50%-0.625rem)] items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-white to-slate-100 p-5 shadow-lg transition duration-300 sm:w-[calc(25%-0.95rem)] hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_oklch(0.81_0.14_210/50%)]"
             >
               <div className="relative h-16 w-full transition duration-300 group-hover:scale-105">
                 <Image src={b.logo} alt={b.name} fill sizes="180px" className="object-contain" />
