@@ -56,9 +56,9 @@ export default function HeaderClient({
           <Image
             src="/images/elite-wholesale-logo.png"
             alt="Elite Wholesale"
-            width={220}
-            height={102}
-            className="h-12 w-auto sm:h-14"
+            width={320}
+            height={149}
+            className="h-14 w-auto sm:h-[4.5rem] lg:h-20"
             priority
           />
         </Link>
