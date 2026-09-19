@@ -1,0 +1,15 @@
+# Local development only (picked up automatically by `docker compose up`; Dokploy/servers use
+# docker-compose.yml alone). Publishes the ports on your machine and keeps uploaded images in
+# the repo folder so you can see them.
+services:
+  db:
+    ports:
+      - "3307:3306"
+  api:
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend/public/uploads:/var/www/public/uploads
+  web:
+    ports:
+      - "3000:3000"

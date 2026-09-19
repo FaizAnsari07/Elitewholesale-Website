@@ -1,6 +1,10 @@
 # Whole stack: website + PHP API + MariaDB.
-#   docker compose up --build
-# Site: http://localhost:3000   Admin: http://localhost:3000/admin/login   API: http://localhost:8080
+# This base file publishes NO host ports, so it is safe on a server / Dokploy (the platform's
+# proxy routes the domain to service `web`, port 3000; the database and API stay private).
+# Local development: `docker compose up --build` also loads docker-compose.override.yml
+# automatically, which adds the localhost ports:
+#   Site: http://localhost:3000   Admin: http://localhost:3000/admin/login   API: http://localhost:8080
+# (`docker compose -f docker-compose.yml ...`, as Dokploy runs it, skips the override.)
 name: elitewholesale
 
 services:
@@ -16,8 +20,6 @@ services:
       - db_data:/var/lib/mysql
       # Loaded only on the first start of an empty database volume.
       - ./backend/db/init:/docker-entrypoint-initdb.d:ro
-    ports:
-      - "3307:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
       interval: 5s
@@ -38,10 +40,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       API_KEY: ${CATALOG_API_KEY}
     volumes:
-      # Images uploaded from the admin panel persist here.
-      - ./backend/public/uploads:/var/www/public/uploads
-    ports:
-      - "8080:80"
+      - uploads:/var/www/public/uploads
     healthcheck:
       test: ["CMD", "php", "-r", "exit(@file_get_contents('http://localhost/categories.php') ? 0 : 1);"]
       interval: 5s
@@ -65,9 +64,8 @@ services:
       ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET}
     volumes:
       - web_data:/app/data
-    ports:
-      - "3000:3000"
 
 volumes:
   db_data:
+  uploads:
   web_data:
