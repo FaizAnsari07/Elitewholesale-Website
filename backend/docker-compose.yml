@@ -34,7 +34,6 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       API_KEY: ${CATALOG_API_KEY}
-      PUBLIC_URL: ${PUBLIC_URL}
     volumes:
       # Live-edit PHP during development; uploads persist on the host.
       - ./lib:/var/www/lib:ro

@@ -58,7 +58,7 @@ Copy this `backend/` folder to the server (for example `rsync -av --exclude .env
 
     cd ~/backend
     cp .env.production.example .env
-    nano .env      # set API_DOMAIN, PUBLIC_URL=https://<API_DOMAIN>, and strong secrets
+    nano .env      # set API_DOMAIN and strong secrets
                    # (generate each with: openssl rand -hex 32)
     docker compose -f docker-compose.prod.yml --env-file .env up -d --build
 

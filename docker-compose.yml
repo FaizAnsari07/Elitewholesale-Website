@@ -1,0 +1,73 @@
+# Whole stack: website + PHP API + MariaDB.
+#   docker compose up --build
+# Site: http://localhost:3000   Admin: http://localhost:3000/admin/login   API: http://localhost:8080
+name: elitewholesale
+
+services:
+  db:
+    image: mariadb:10.11
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: catalog
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+      # Loaded only on the first start of an empty database volume.
+      - ./backend/db/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: catalog
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      API_KEY: ${CATALOG_API_KEY}
+    volumes:
+      # Images uploaded from the admin panel persist here.
+      - ./backend/public/uploads:/var/www/public/uploads
+    ports:
+      - "8080:80"
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@file_get_contents('http://localhost/categories.php') ? 0 : 1);"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build:
+      context: .
+      args:
+        CATALOG_API_URL: http://api
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      CATALOG_API_URL: http://api
+      CATALOG_API_KEY: ${CATALOG_API_KEY}
+      ADMIN_USERNAME: ${ADMIN_USERNAME}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      ADMIN_SESSION_SECRET: ${ADMIN_SESSION_SECRET}
+    volumes:
+      - web_data:/app/data
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
+  web_data:

@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllBrands, getAllCategories, getAllProducts } from "@/lib/catalog";
 
+export const dynamic = "force-dynamic";
+
 const BASE_URL = "https://elitewholesale.online";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

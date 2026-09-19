@@ -1,6 +1,6 @@
 <?php
 // POST raw image bytes. Headers: X-Api-Key, Content-Type: image/*, X-Filename.
-// Returns { url } -- an absolute URL served from this API host's /uploads/.
+// Returns { url } -- a site-relative path (/uploads/...) that the website proxies to this API.
 require __DIR__ . '/../../lib/config.php';
 require_api_key();
 
@@ -20,5 +20,4 @@ if (!is_dir($dir) && !mkdir($dir, 0775, true)) json_out(['message' => 'Cannot cr
 $name = $base . '-' . substr(md5($bytes), 0, 8) . '.' . $allowed[$mime];
 file_put_contents($dir . '/' . $name, $bytes);
 
-$publicBase = rtrim(getenv('PUBLIC_URL') ?: ((isset($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']), '/');
-json_out(['url' => $publicBase . '/uploads/' . date('Y/m') . '/' . $name], 201);
+json_out(['url' => '/uploads/' . date('Y/m') . '/' . $name], 201);
