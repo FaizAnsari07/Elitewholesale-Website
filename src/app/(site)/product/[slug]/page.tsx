@@ -6,7 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import ProductEnquirySelector, {
   SimpleProductEnquiryButton,
 } from "@/components/ProductEnquirySelector";
-import { getProductBySlug, getProductsByCategory } from "@/lib/wordpress";
+import { getProductBySlug, getProductsByCategory } from "@/lib/catalog";
 import { WHOLESALE_PRICE_LABEL, isNewProduct } from "@/lib/site";
 
 export async function generateMetadata({

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import type { Category, Brand } from "@/lib/wordpress";
+import type { Category, Brand } from "@/lib/catalog";
 import { mainNav, siteConfig } from "@/lib/site";
 import SearchBox from "@/components/SearchBox";
 import EnquiryCartBadge from "@/components/EnquiryCartBadge";

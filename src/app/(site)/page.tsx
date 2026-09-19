@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { getAllCategories, getProductBySlug, type Product } from "@/lib/wordpress";
+import { getAllCategories, getProductBySlug, type Product } from "@/lib/catalog";
 
 const HERO_SLUG = "lovmee-30k-lov30";
 

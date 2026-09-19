@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import ProductCard from "@/components/ProductCard";
-import { getAllCategories, getAllProducts } from "@/lib/wordpress";
+import { getAllCategories, getAllProducts } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "Shop Wholesale Vapes, Lighters, Torches & Exotic Snacks",

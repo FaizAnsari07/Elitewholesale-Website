@@ -2,7 +2,7 @@ import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import DeleteButton from "@/components/admin/DeleteButton";
-import { listBrands, type WcTerm } from "@/lib/woocommerce-admin";
+import { listBrands, type WcTerm } from "@/lib/admin-api";
 import { deleteBrandAction } from "@/app/admin/actions";
 
 export default async function AdminBrandsPage({

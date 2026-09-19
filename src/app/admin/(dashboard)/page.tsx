@@ -1,6 +1,6 @@
 import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
-import { listProducts, listCategories, listBrands } from "@/lib/woocommerce-admin";
+import { listProducts, listCategories, listBrands } from "@/lib/admin-api";
 
 export default async function AdminDashboardPage() {
   const [products, categories, brands] = await Promise.all([

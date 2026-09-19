@@ -1,21 +1,23 @@
 import type { NextConfig } from "next";
 
+// Product images uploaded through the admin panel are served by the API host,
+// so allow that host for next/image. Migrated images live in /public/uploads.
+const apiUrl = process.env.CATALOG_API_URL ? new URL(process.env.CATALOG_API_URL) : null;
+
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "localhost",
-        port: "8080",
-        pathname: "/wp-content/uploads/**",
-      },
-    ],
-    // The image optimizer refuses to fetch from loopback/private IPs by
-    // default (SSRF protection). Safe here: this only ever points at our
-    // own local WordPress backend (wordpress/docker-compose.yml), never at
-    // user-controlled input. A real deployment's WORDPRESS_GRAPHQL_URL
-    // would point at a real domain instead, so this flag is a no-op there.
-    dangerouslyAllowLocalIP: true,
+    remotePatterns: apiUrl
+      ? [
+          {
+            protocol: apiUrl.protocol.replace(":", "") as "http" | "https",
+            hostname: apiUrl.hostname,
+            port: apiUrl.port,
+            pathname: "/uploads/**",
+          },
+        ]
+      : [],
+    // Loopback is only reachable in local development.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
   },
 };
 

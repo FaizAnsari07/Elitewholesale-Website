@@ -1,5 +1,5 @@
 import Image from "next/image";
-import type { WcProduct, WcTerm } from "@/lib/woocommerce-admin";
+import type { WcProduct, WcTerm } from "@/lib/admin-api";
 
 export default function ProductForm({
   action,

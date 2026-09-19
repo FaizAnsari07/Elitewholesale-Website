@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllBrands, getAllCategories, getAllProducts } from "@/lib/wordpress";
+import { getAllBrands, getAllCategories, getAllProducts } from "@/lib/catalog";
 
 const BASE_URL = "https://elitewholesale.online";
 

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
-import { getProduct, listCategories } from "@/lib/woocommerce-admin";
+import { getProduct, listCategories } from "@/lib/admin-api";
 import { updateProductAction } from "@/app/admin/actions";
 
 export default async function EditProductPage({

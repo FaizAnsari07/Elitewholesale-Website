@@ -18,7 +18,7 @@ import {
   createBrand,
   updateBrand,
   deleteBrand,
-} from "@/lib/woocommerce-admin";
+} from "@/lib/admin-api";
 import { writeSettings } from "@/lib/admin-settings";
 
 // ---- Auth ----
@@ -64,8 +64,8 @@ async function attachImageIfProvided(
 ): Promise<void> {
   const image = formData.get("image");
   if (image instanceof File && image.size > 0) {
-    const media = await uploadProductImage(image);
-    payload.images = [{ id: media.id }];
+    const { url } = await uploadProductImage(image);
+    payload.image_url = url;
   }
 }
 

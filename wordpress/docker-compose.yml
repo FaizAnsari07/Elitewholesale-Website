@@ -3,6 +3,7 @@ services:
     # The original site's database is MariaDB (confirmed by the AI1WM dump
     # header: "Class: Ai1wm_Database_Mariadb"), which is why some collations
     # in the dump (e.g. utf8mb3_uca1400_ai_ci) aren't recognized by MySQL 8.
+    # IMPORTANT: db_data holds the real catalog. NEVER run `docker compose down -v`.
     image: mariadb:10.11
     restart: unless-stopped
     environment:
@@ -20,53 +21,24 @@ services:
       timeout: 5s
       retries: 20
 
-  wordpress:
-    image: wordpress:php8.2-apache
+  api:
+    build: ./api
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
     environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_TABLE_PREFIX: wp_
-      WORDPRESS_DEBUG: 0
-      # WPGraphQL queries that expand full variation data across 100
-      # products at once exceed PHP's default 128M memory limit.
-      WORDPRESS_CONFIG_EXTRA: |
-        define('WP_MEMORY_LIMIT', '512M');
-        ini_set('memory_limit', '512M');
-      # Application Passwords (used by the Next.js admin panel to
-      # authenticate against the WooCommerce REST API) refuse to work
-      # without HTTPS unless WordPress considers itself a "local"
-      # environment -- see wp_is_application_passwords_supported().
-      WP_ENVIRONMENT_TYPE: local
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: catalog
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      API_KEY: ${CATALOG_API_KEY}
+      PUBLIC_URL: http://localhost:8080
     volumes:
-      - wp_core:/var/www/html
-      - ./wp-content:/var/www/html/wp-content
+      - ./api:/var/www
     ports:
       - "8080:80"
-
-  wpcli:
-    image: wordpress:cli-php8.2
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      # Shares the `wordpress` service's core files (wp-load.php etc, seeded
-      # by its image on first boot) so WP-CLI has an install to act on.
-      - wp_core:/var/www/html
-      - ./wp-content:/var/www/html/wp-content
-    # Not started by `docker compose up`; invoked ad-hoc via
-    # `docker compose run --rm wpcli wp <command> --allow-root`.
-    profiles: ["cli"]
 
 volumes:
   db_data:

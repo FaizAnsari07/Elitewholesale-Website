@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import TermForm from "@/components/admin/TermForm";
-import { getCategory } from "@/lib/woocommerce-admin";
+import { getCategory } from "@/lib/admin-api";
 import { updateCategoryAction } from "@/app/admin/actions";
 
 export default async function EditCategoryPage({

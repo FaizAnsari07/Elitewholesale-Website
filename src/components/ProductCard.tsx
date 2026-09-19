@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Product } from "@/lib/wordpress";
+import type { Product } from "@/lib/catalog";
 import { WHOLESALE_PRICE_LABEL, isNewProduct } from "@/lib/site";
 
 export default function ProductCard({ product }: { product: Product }) {

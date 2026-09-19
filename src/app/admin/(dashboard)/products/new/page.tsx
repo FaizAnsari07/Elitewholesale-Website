@@ -1,6 +1,6 @@
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
-import { listCategories } from "@/lib/woocommerce-admin";
+import { listCategories } from "@/lib/admin-api";
 import { createProductAction } from "@/app/admin/actions";
 
 export default async function NewProductPage() {

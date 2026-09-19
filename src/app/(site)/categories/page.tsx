@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getAllCategories } from "@/lib/wordpress";
+import { getAllCategories } from "@/lib/catalog";
 
 export const metadata: Metadata = {
   title: "Categories",

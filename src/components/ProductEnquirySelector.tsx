@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useEnquiryCart } from "@/lib/enquiry-cart";
-import type { ProductVariation } from "@/lib/wordpress";
+import type { ProductVariation } from "@/lib/catalog";
 
 export function QuantityStepper({
   value,

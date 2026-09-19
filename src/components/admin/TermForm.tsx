@@ -1,4 +1,4 @@
-import type { WcTerm } from "@/lib/woocommerce-admin";
+import type { WcTerm } from "@/lib/admin-api";
 
 export default function TermForm({
   action,

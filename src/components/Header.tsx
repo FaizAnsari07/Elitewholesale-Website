@@ -1,5 +1,5 @@
 import HeaderClient from "@/components/HeaderClient";
-import { getAllBrands, getAllCategories } from "@/lib/wordpress";
+import { getAllBrands, getAllCategories } from "@/lib/catalog";
 
 export default async function Header() {
   const [categories, brands] = await Promise.all([getAllCategories(), getAllBrands()]);

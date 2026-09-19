@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import TermForm from "@/components/admin/TermForm";
-import { getBrand } from "@/lib/woocommerce-admin";
+import { getBrand } from "@/lib/admin-api";
 import { updateBrandAction } from "@/app/admin/actions";
 
 export default async function EditBrandPage({

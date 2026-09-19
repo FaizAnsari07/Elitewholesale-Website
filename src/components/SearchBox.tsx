@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import type { SearchResult } from "@/lib/wordpress";
+import type { SearchResult } from "@/lib/catalog";
 
 export default function SearchBox({ className = "" }: { className?: string }) {
   const router = useRouter();

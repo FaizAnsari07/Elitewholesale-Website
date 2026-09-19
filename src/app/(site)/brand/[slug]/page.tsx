@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ProductCard from "@/components/ProductCard";
-import { getBrandBySlug, getProductsByBrand } from "@/lib/wordpress";
+import { getBrandBySlug, getProductsByBrand } from "@/lib/catalog";
 
 export async function generateMetadata({
   params,

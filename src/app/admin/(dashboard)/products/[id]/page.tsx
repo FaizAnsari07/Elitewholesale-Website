@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DeleteButton from "@/components/admin/DeleteButton";
-import { getProduct } from "@/lib/woocommerce-admin";
+import { getProduct } from "@/lib/admin-api";
 import { deleteProductAction } from "@/app/admin/actions";
 
 export default async function ProductViewPage({
