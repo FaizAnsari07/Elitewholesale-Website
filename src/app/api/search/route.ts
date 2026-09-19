@@ -6,6 +6,10 @@ export async function GET(request: Request) {
   if (q.trim().length < 2) {
     return NextResponse.json({ results: [] });
   }
-  const results = await searchProducts(q);
-  return NextResponse.json({ results });
+  try {
+    return NextResponse.json({ results: await searchProducts(q) });
+  } catch (error) {
+    console.error("[search]", error instanceof Error ? error.message : error);
+    return NextResponse.json({ results: [] }, { status: 503 });
+  }
 }

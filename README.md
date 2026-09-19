@@ -28,6 +28,11 @@ Start only the backend, then run Next.js locally with hot reload:
 ## Deploying
 
 - Website on Vercel: set `CATALOG_API_URL` (public API address) and `CATALOG_API_KEY`.
+- Website as its own app (Dokploy/Nixpacks/Docker): set these as **build and runtime** variables, then redeploy:
+  `CATALOG_API_URL` (address of the PHP API as reachable from the website's container, e.g. `http://api`
+  when both run in one Docker Compose project, or the API's public `https://` URL), `CATALOG_API_KEY`,
+  `ADMIN_USERNAME`, `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`. Without `CATALOG_API_URL` the catalog pages show an
+  error page and the server log says `CATALOG_API_URL is not set`. `localhost` never works inside a container.
 - API + database on a server with HTTPS: see `backend/README.md`.
 - Everything on one server: `docker compose up -d --build` with a proxy/HTTPS in front of port 3000.
 

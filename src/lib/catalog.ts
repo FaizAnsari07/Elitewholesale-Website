@@ -1,20 +1,53 @@
 import "server-only";
 
-const CATALOG_API_URL = process.env.CATALOG_API_URL || "http://localhost:8080";
+// Address of the PHP catalog API (backend/). Read on the server only.
+// Production must set CATALOG_API_URL and never guesses an address: only local
+// development (`next dev`) falls back to the docker-compose default.
+function apiBaseUrl(): string {
+  const url = process.env.CATALOG_API_URL?.trim();
+  if (url) return url.replace(/\/$/, "");
+  if (process.env.NODE_ENV !== "production") return "http://localhost:8080";
+  throw new Error(
+    "CATALOG_API_URL is not set. Set it to the address of the PHP catalog API (see README, Deploying).",
+  );
+}
 
 // Revalidate every 60s so admin edits show up on the site without a rebuild.
 const REVALIDATE_SECONDS = 60;
 
 async function apiGet<T>(path: string, params: Record<string, string> = {}): Promise<T> {
-  const url = new URL(`${CATALOG_API_URL}${path}`);
+  const base = apiBaseUrl();
+  const url = new URL(`${base}${path}`);
   for (const [key, value] of Object.entries(params)) {
     url.searchParams.set(key, value);
   }
-  const res = await fetch(url.toString(), { next: { revalidate: REVALIDATE_SECONDS } });
+  let res: Response;
+  try {
+    res = await fetch(url.toString(), { next: { revalidate: REVALIDATE_SECONDS } });
+  } catch (cause) {
+    throw new Error(`Catalog API unreachable at ${base} (check CATALOG_API_URL and that the API is running)`, {
+      cause,
+    });
+  }
   if (!res.ok) {
-    throw new Error(`Catalog API request failed: ${res.status} ${res.statusText}`);
+    throw new Error(`Catalog API request failed: ${res.status} ${res.statusText} (${base}${path})`);
   }
   return res.json() as Promise<T>;
+}
+
+/**
+ * For optional page sections (header menus, home rails, sitemap): if the API is
+ * down, log it and render without that data instead of failing the whole page.
+ * Pages whose main content IS catalog data should let the error propagate to
+ * the friendly error page instead.
+ */
+export async function orFallback<T>(promise: Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await promise;
+  } catch (error) {
+    console.error("[catalog]", error instanceof Error ? error.message : error);
+    return fallback;
+  }
 }
 
 export type ProductTerm = { name: string; slug: string };

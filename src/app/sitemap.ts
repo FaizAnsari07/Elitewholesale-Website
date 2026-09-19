@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getAllBrands, getAllCategories, getAllProducts } from "@/lib/catalog";
+import { getAllBrands, getAllCategories, getAllProducts, orFallback } from "@/lib/catalog";
 
 export const dynamic = "force-dynamic";
 
@@ -7,9 +7,9 @@ const BASE_URL = "https://elitewholesale.online";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, categories, brands] = await Promise.all([
-    getAllProducts(),
-    getAllCategories(),
-    getAllBrands(),
+    orFallback(getAllProducts(), []),
+    orFallback(getAllCategories(), []),
+    orFallback(getAllBrands(), []),
   ]);
 
   const staticPages = [

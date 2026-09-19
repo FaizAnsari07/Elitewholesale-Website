@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Store, Tag, Truck } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { getAllCategories, getProductBySlug, type Product } from "@/lib/catalog";
+import { getAllCategories, getProductBySlug, orFallback, type Product } from "@/lib/catalog";
 
 const HERO_SLUG = "lovmee-30k-lov30";
 
@@ -79,7 +79,7 @@ const RELIABLE_COMPANY_FEATURES = [
 ];
 
 async function resolveProducts(slugs: string[]): Promise<Product[]> {
-  const results = await Promise.all(slugs.map(getProductBySlug));
+  const results = await orFallback(Promise.all(slugs.map(getProductBySlug)), []);
   return results.filter((p): p is Product => Boolean(p));
 }
 
@@ -122,13 +122,13 @@ export default async function Home() {
     midBannerProduct,
     topProducts,
   ] = await Promise.all([
-    getProductBySlug(HERO_SLUG),
+    orFallback(getProductBySlug(HERO_SLUG), null),
     resolveProducts(NEW_FLAVORS_ELIQUIDS),
     resolveProducts(NEW_PRODUCTS),
     resolveProducts(NEW_FLAVORS_DISPOSABLES),
     resolveProducts(NEW_THIS_SEASON),
-    getAllCategories(),
-    getProductBySlug(MID_BANNER_SLUG),
+    orFallback(getAllCategories(), []),
+    orFallback(getProductBySlug(MID_BANNER_SLUG), null),
     resolveProducts(TOP_PRODUCTS),
   ]);
 
