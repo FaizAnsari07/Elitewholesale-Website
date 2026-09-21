@@ -48,7 +48,7 @@ export default function HeaderClient({
             <Wordmark />
           </Link>
 
-          <nav className="hidden items-center justify-center gap-1 lg:flex">
+          <nav className="hidden items-center justify-center gap-1 lg:flex lg:-translate-x-4 xl:-translate-x-12">
             {mainNav.map((item) => {
               if (item.label === "Categories" || item.label === "Brands") {
                 const key = item.label === "Categories" ? "categories" : "brands";
