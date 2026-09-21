@@ -20,11 +20,12 @@ const partnerBrands = [
 export default function AboutUsPage() {
   return (
     <div className="page-shell py-12">
-      <p className="section-label">About us</p>
-      <h1 className="mt-3 text-4xl font-black text-foreground sm:text-5xl">Built for independent retail</h1>
-
-      <div className="mt-10 grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_320px]">
+      <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1fr_320px] lg:gap-16">
         <div className="space-y-5 text-muted-foreground">
+          <div>
+            <p className="section-label">About us</p>
+            <h1 className="mt-3 text-4xl font-black text-foreground sm:text-5xl">Built for independent retail</h1>
+          </div>
           <p>
             Established in 2024, Elite Wholesale is a premier wholesaler
             located in Portland, Oregon, focused on providing a wide range of
@@ -45,12 +46,12 @@ export default function AboutUsPage() {
             service for all our customers.
           </p>
         </div>
-        <div className="relative mx-auto aspect-[9/16] w-full max-w-[260px]">
+        <div className="relative mx-auto aspect-[9/16] w-full max-w-[280px]">
           <Image
             src="/images/2025/02/vape_kit_mockup_02.png"
             alt="Elite Wholesale vape product kit"
             fill
-            sizes="260px"
+            sizes="280px"
             className="object-contain"
           />
         </div>
