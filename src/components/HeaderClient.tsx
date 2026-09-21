@@ -43,12 +43,12 @@ export default function HeaderClient({
   return (
     <header className="sticky top-0 z-40 p-3 sm:p-5">
       <div className="header-gradient page-shell rounded-2xl">
-        <div className="flex min-h-16 items-center gap-3 py-3">
+        <div className="flex min-h-16 items-center gap-3 py-3 lg:grid lg:grid-cols-[1fr_auto_1fr]">
           <Link href="/" className="min-w-0" onClick={() => setMobileOpen(false)} aria-label="Elite Wholesale home">
             <Wordmark />
           </Link>
 
-          <nav className="ml-4 hidden items-center gap-1 lg:flex">
+          <nav className="hidden items-center justify-center gap-1 lg:flex">
             {mainNav.map((item) => {
               if (item.label === "Categories" || item.label === "Brands") {
                 const key = item.label === "Categories" ? "categories" : "brands";
@@ -108,8 +108,8 @@ export default function HeaderClient({
             })}
           </nav>
 
-          <div className="ml-auto hidden items-center gap-2 lg:flex">
-            <div className="w-64">
+          <div className="hidden items-center gap-2 justify-self-end lg:flex">
+            <div className="w-44 xl:w-64">
               <SearchBox />
             </div>
             <EnquiryCartBadge />
