@@ -1,5 +1,6 @@
 import Image from "next/image";
 import VariationsEditor from "@/components/admin/VariationsEditor";
+import ProductStatusToggle from "@/components/admin/ProductStatusToggle";
 import type { AdminProduct, AdminTerm } from "@/lib/admin-api";
 
 export default function ProductForm({
@@ -82,17 +83,12 @@ export default function ProductForm({
 
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="label">
-            Stock Status
-          </label>
-          <select
-            name="stock_status"
-            defaultValue={product?.stock_status ?? "instock"}
-            className="mt-1 field"
-          >
-            <option value="instock">In Stock</option>
-            <option value="outofstock">Out of Stock</option>
-          </select>
+          <label className="label">Active / Inactive</label>
+          <ProductStatusToggle
+            productId={product?.id}
+            productName={product?.name ?? ""}
+            initialActive={(product?.stock_status ?? "instock") === "instock"}
+          />
         </div>
         <div>
           <label className="label">Status</label>
@@ -163,7 +159,7 @@ export default function ProductForm({
         />
       </div>
 
-      <VariationsEditor initial={product?.variations ?? []} />
+      <VariationsEditor initial={product?.variations ?? []} productId={product?.id} />
 
       <button
         type="submit"

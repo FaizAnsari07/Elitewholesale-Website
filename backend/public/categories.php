@@ -16,7 +16,8 @@ function format_category(array $row): array {
     ];
 }
 
-$baseSql = "SELECT c.*, (SELECT COUNT(*) FROM product_categories pc WHERE pc.category_id = c.id) AS product_count FROM categories c";
+// Counts only include products the website actually shows (active + published).
+$baseSql = "SELECT c.*, (SELECT COUNT(*) FROM product_categories pc JOIN products p ON p.id = pc.product_id WHERE pc.category_id = c.id AND " . visible_product_sql() . ") AS product_count FROM categories c";
 
 $slug = $_GET['slug'] ?? null;
 if ($slug !== null) {

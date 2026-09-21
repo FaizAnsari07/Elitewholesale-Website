@@ -19,7 +19,7 @@ function sample_image(PDO $pdo, int $brandId): ?string {
     $stmt = $pdo->prepare("
         SELECT p.image_url FROM products p
         JOIN product_brands pb ON pb.product_id = p.id
-        WHERE pb.brand_id = ? AND p.image_url IS NOT NULL
+        WHERE pb.brand_id = ? AND p.image_url IS NOT NULL AND " . visible_product_sql() . "
         LIMIT 1
     ");
     $stmt->execute([$brandId]);
@@ -27,7 +27,8 @@ function sample_image(PDO $pdo, int $brandId): ?string {
     return $url === false ? null : $url;
 }
 
-$baseSql = "SELECT b.*, (SELECT COUNT(*) FROM product_brands pb WHERE pb.brand_id = b.id) AS product_count FROM brands b";
+// Counts only include products the website actually shows (active + published).
+$baseSql = "SELECT b.*, (SELECT COUNT(*) FROM product_brands pb JOIN products p ON p.id = pb.product_id WHERE pb.brand_id = b.id AND " . visible_product_sql() . ") AS product_count FROM brands b";
 $withSample = isset($_GET['sample_image']);
 
 $slug = $_GET['slug'] ?? null;

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { getProduct } from "@/lib/admin-api";
-import { deleteProductAction } from "@/app/admin/actions";
+import { deleteProductAndReturnAction } from "@/app/admin/actions";
 
 export default async function ProductViewPage({
   params,
@@ -44,7 +44,7 @@ export default async function ProductViewPage({
                   product.stock_status === "instock" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"
                 }`}
               >
-                {product.stock_status === "instock" ? "In Stock" : "Out of Stock"}
+                {product.stock_status === "instock" ? "Active" : "Inactive"}
               </span>
               <span className="rounded bg-foreground/5 px-2 py-1 text-xs font-semibold capitalize text-foreground">
                 {product.status}
@@ -91,8 +91,8 @@ export default async function ProductViewPage({
                   {product.variations.map((v) => (
                     <li key={v.id} className="flex items-center justify-between gap-3 px-3 py-2">
                       <span className="truncate text-foreground">{v.label}</span>
-                      <span className={`text-xs font-semibold uppercase ${v.stock_status === "instock" ? "text-success" : "text-primary"}`}>
-                        {v.stock_status === "instock" ? "In Stock" : "Out of Stock"}
+                      <span className={`text-xs font-semibold uppercase ${v.stock_status === "instock" ? "text-success" : "text-destructive"}`}>
+                        {v.stock_status === "instock" ? "Active" : "Inactive"}
                       </span>
                     </li>
                   ))}
@@ -107,7 +107,7 @@ export default async function ProductViewPage({
               >
                 Edit Product
               </Link>
-              <DeleteButton action={deleteProductAction.bind(null, product.id)} label="Delete Product" />
+              <DeleteButton action={deleteProductAndReturnAction.bind(null, product.id)} label="Delete Product" />
             </div>
           </div>
         </div>

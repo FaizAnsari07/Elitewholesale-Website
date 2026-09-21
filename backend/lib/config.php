@@ -67,3 +67,11 @@ function unique_term_slug(PDO $pdo, string $table, string $name): string {
         $slug = $base . '-' . $n;
     }
 }
+
+// SQL condition for products the PUBLIC website may show (use with the table aliased as $alias).
+// A product is visible when it is published, ACTIVE (stock_status = 'instock'; "inactive" is stored
+// as 'outofstock'), and, if it has flavors, at least one flavor is active.
+function visible_product_sql(string $alias = 'p'): string {
+    return "$alias.status = 'publish' AND $alias.stock_status = 'instock' AND ($alias.type <> 'variable' OR EXISTS ("
+        . "SELECT 1 FROM product_variations pv WHERE pv.product_id = $alias.id AND pv.stock_status = 'instock'))";
+}

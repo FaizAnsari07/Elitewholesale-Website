@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ProductForm from "@/components/admin/ProductForm";
 import { getProduct, listBrands, listCategories } from "@/lib/admin-api";
-import { updateProductAction } from "@/app/admin/actions";
+import DeleteButton from "@/components/admin/DeleteButton";
+import { deleteProductAndReturnAction, updateProductAction } from "@/app/admin/actions";
 
 export default async function EditProductPage({
   params,
@@ -29,6 +30,9 @@ export default async function EditProductPage({
           brands={brands}
           submitLabel="Save Changes"
         />
+        <div className="mt-6 max-w-2xl border-t border-border pt-5">
+          <DeleteButton action={deleteProductAndReturnAction.bind(null, product.id)} label="Delete this product" />
+        </div>
       </div>
     </div>
   );

@@ -15,9 +15,33 @@ export default async function AdminBrandsPage({
   const brands = await listBrands();
 
   const columns: DataTableColumn<AdminTerm>[] = [
-    { key: "name", header: "Name", render: (b) => <span className="font-semibold text-primary">{b.name}</span> },
+    {
+      key: "name",
+      header: "Name",
+      render: (b) => (
+        <Link
+          href={`/admin/products?brand=${b.id}`}
+          title={`View products by ${b.name}`}
+          className="font-semibold text-primary hover:underline"
+        >
+          {b.name}
+        </Link>
+      ),
+    },
     { key: "slug", header: "Slug", render: (b) => <span className="text-muted-foreground">{b.slug}</span> },
-    { key: "count", header: "Products", render: (b) => b.count },
+    {
+      key: "count",
+      header: "Products",
+      render: (b) => (
+        <Link
+          href={`/admin/products?brand=${b.id}`}
+          title={`View products by ${b.name}`}
+          className="inline-flex min-w-9 justify-center rounded-lg border border-border px-2.5 py-1 text-sm font-bold hover:border-primary hover:text-primary"
+        >
+          {b.count}
+        </Link>
+      ),
+    },
     {
       key: "actions",
       header: "Actions",

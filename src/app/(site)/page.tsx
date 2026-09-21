@@ -60,7 +60,7 @@ const TOP_PRODUCTS = [
 const TOP_BRANDS = [
   { name: "Tre House", slug: "tre-house", logo: "/images/2025/11/Tre-house-rbg.png" },
   { name: "Coastal Clouds", slug: "coastal-clouds", logo: "/images/2025/11/coastal-clouds-rbg.png" },
-  { name: "Ignitus", slug: "ignitus", logo: "/images/2025/04/lgnitus.jpg" },
+  { name: "Ignitus", slug: "ignitus", logo: "/images/2025/04/Ignitus-Icon.jpg" },
   { name: "Nexa", slug: "nexa", logo: "/images/2025/03/nexa-png.png" },
   { name: "Geek Bar", slug: "geek-bar", logo: "/images/2025/03/geek-bar.png" },
 ];

@@ -28,9 +28,33 @@ export default async function AdminCategoriesPage({
         </div>
       ),
     },
-    { key: "name", header: "Name", render: (c) => <span className="font-semibold text-primary">{c.name}</span> },
+    {
+      key: "name",
+      header: "Name",
+      render: (c) => (
+        <Link
+          href={`/admin/products?category=${c.id}`}
+          title={`View products in ${c.name}`}
+          className="font-semibold text-primary hover:underline"
+        >
+          {c.name}
+        </Link>
+      ),
+    },
     { key: "slug", header: "Slug", render: (c) => <span className="text-muted-foreground">{c.slug}</span> },
-    { key: "count", header: "Products", render: (c) => c.count },
+    {
+      key: "count",
+      header: "Products",
+      render: (c) => (
+        <Link
+          href={`/admin/products?category=${c.id}`}
+          title={`View products in ${c.name}`}
+          className="inline-flex min-w-9 justify-center rounded-lg border border-border px-2.5 py-1 text-sm font-bold hover:border-primary hover:text-primary"
+        >
+          {c.count}
+        </Link>
+      ),
+    },
     {
       key: "actions",
       header: "Actions",

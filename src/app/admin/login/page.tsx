@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { LockKeyhole } from "lucide-react";
 import { loginAction } from "@/app/admin/actions";
 
@@ -11,14 +12,16 @@ export default async function AdminLoginPage({
 
   return (
     <div className="relative grid min-h-screen place-items-center p-4">
-      <Image
-        src="/images/admin-login-bg.png"
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="-z-10 object-cover opacity-10"
-      />
+      <Link href="/" aria-label="Elite Wholesale home" className="absolute left-4 top-4 sm:left-8 sm:top-6">
+        <Image
+          src="/images/elite-wholesale-logo.png"
+          alt="Elite Wholesale"
+          width={731}
+          height={341}
+          priority
+          className="h-16 w-auto sm:h-24"
+        />
+      </Link>
       <div className="glass-strong w-full max-w-sm rounded-2xl p-7">
         <LockKeyhole className="size-9 text-primary" />
         <h1 className="mt-5 text-2xl font-black">Admin access</h1>

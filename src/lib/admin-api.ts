@@ -20,17 +20,36 @@ async function apiFetch<T>(
   for (const [key, value] of Object.entries(options.searchParams ?? {})) {
     url.searchParams.set(key, value);
   }
-  const res = await fetch(url.toString(), {
-    method: options.method ?? "GET",
-    headers: {
-      "X-Api-Key": apiKey(),
-      "Content-Type": "application/json",
-    },
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    cache: "no-store",
-  });
+  let res: Response;
+  try {
+    res = await fetch(url.toString(), {
+      method: options.method ?? "GET",
+      headers: {
+        "X-Api-Key": apiKey(),
+        "Content-Type": "application/json",
+      },
+      body: options.body ? JSON.stringify(options.body) : undefined,
+      cache: "no-store",
+    });
+  } catch (cause) {
+    throw new Error(
+      `Catalog API unreachable at ${baseUrl()} (check CATALOG_API_URL and that the PHP API is running)`,
+      { cause },
+    );
+  }
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: { message?: string } | null = null;
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      // A web page instead of JSON means CATALOG_API_URL points at something that is not the PHP API.
+      throw new Error(
+        `Catalog API at ${baseUrl()} returned a web page instead of JSON (HTTP ${res.status}). ` +
+          "Check CATALOG_API_URL and that the PHP API, not another app, is listening there.",
+      );
+    }
+  }
   if (!res.ok) {
     const message = data?.message || `${res.status} ${res.statusText}`;
     throw new Error(message);

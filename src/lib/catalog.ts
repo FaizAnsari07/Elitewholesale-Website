@@ -23,7 +23,7 @@ async function apiGet<T>(path: string, params: Record<string, string> = {}): Pro
   }
   let res: Response;
   try {
-    res = await fetch(url.toString(), { next: { revalidate: REVALIDATE_SECONDS } });
+    res = await fetch(url.toString(), { next: { revalidate: REVALIDATE_SECONDS, tags: ["catalog"] } });
   } catch (cause) {
     throw new Error(`Catalog API unreachable at ${base} (check CATALOG_API_URL and that the API is running)`, {
       cause,

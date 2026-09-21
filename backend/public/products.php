@@ -30,7 +30,8 @@ function hydrate_product(PDO $pdo, array $row): array {
 
     $variations = null;
     if ($row['type'] === 'variable') {
-        $vars = $pdo->prepare("SELECT * FROM product_variations WHERE product_id = ? ORDER BY sort_order");
+        // Inactive flavors are never shown on the website.
+        $vars = $pdo->prepare("SELECT * FROM product_variations WHERE product_id = ? AND stock_status = 'instock' ORDER BY sort_order");
         $vars->execute([$id]);
         $nodes = [];
         foreach ($vars->fetchAll() as $v) {
@@ -76,7 +77,7 @@ $brand = $_GET['brand'] ?? null;
 $search = $_GET['search'] ?? null;
 
 if ($slug !== null) {
-    $stmt = $pdo->prepare("SELECT * FROM products WHERE slug = ? AND status = 'publish' LIMIT 1");
+    $stmt = $pdo->prepare("SELECT p.* FROM products p WHERE p.slug = ? AND " . visible_product_sql() . " LIMIT 1");
     $stmt->execute([$slug]);
     $row = $stmt->fetch();
     json_out(['product' => $row ? hydrate_product($pdo, $row) : null]);
@@ -87,7 +88,7 @@ if ($category !== null) {
         SELECT p.* FROM products p
         JOIN product_categories pc ON pc.product_id = p.id
         JOIN categories c ON c.id = pc.category_id
-        WHERE c.slug = ? AND p.status = 'publish'
+        WHERE c.slug = ? AND " . visible_product_sql() . "
     ");
     $stmt->execute([$category]);
     json_out(['products' => array_map(fn($r) => hydrate_product($pdo, $r), $stmt->fetchAll())]);
@@ -98,14 +99,14 @@ if ($brand !== null) {
         SELECT p.* FROM products p
         JOIN product_brands pb ON pb.product_id = p.id
         JOIN brands b ON b.id = pb.brand_id
-        WHERE b.slug = ? AND p.status = 'publish'
+        WHERE b.slug = ? AND " . visible_product_sql() . "
     ");
     $stmt->execute([$brand]);
     json_out(['products' => array_map(fn($r) => hydrate_product($pdo, $r), $stmt->fetchAll())]);
 }
 
 if ($search !== null) {
-    $stmt = $pdo->prepare("SELECT slug, name, image_url, image_alt FROM products WHERE status = 'publish' AND name LIKE ? LIMIT 8");
+    $stmt = $pdo->prepare("SELECT p.slug, p.name, p.image_url, p.image_alt FROM products p WHERE " . visible_product_sql() . " AND p.name LIKE ? LIMIT 8");
     $stmt->execute(['%' . $search . '%']);
     $rows = $stmt->fetchAll();
     json_out(['products' => array_map(fn($r) => [
@@ -115,5 +116,5 @@ if ($search !== null) {
     ], $rows)]);
 }
 
-$rows = $pdo->query("SELECT * FROM products WHERE status = 'publish'")->fetchAll();
+$rows = $pdo->query("SELECT p.* FROM products p WHERE " . visible_product_sql())->fetchAll();
 json_out(['products' => array_map(fn($r) => hydrate_product($pdo, $r), $rows)]);
