@@ -112,7 +112,7 @@ INSERT INTO `categories` VALUES
 (9,'Torches & Lighters','torches-lighters',NULL,'/uploads/2025/05/Lighters-Torches.jpg'),
 (10,'Accessories & misc.','accessories-misc',NULL,'/uploads/2025/03/vape_accessories.jpg'),
 (11,'Mushrooms','mushrooms',NULL,'/uploads/2025/05/mushroom.jpg'),
-(12,'Hookah / Shisha','hookah-shisha',NULL,NULL),
+(12,'Hookah / Shisha','hookah-shisha',NULL,'/uploads/2026/09/hookah-shisha.png'),
 (13,'Kratom Extract & Supplements','kratom-extract-supplements',NULL,NULL);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 DROP TABLE IF EXISTS `product_attributes`;
