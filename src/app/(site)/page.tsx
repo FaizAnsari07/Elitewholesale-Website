@@ -2,7 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Store, Tag, Truck } from "lucide-react";
 import ProductCard from "@/components/ProductCard";
-import { getAllCategories, getProductBySlug, orFallback, type Product } from "@/lib/catalog";
+import {
+  getAllCategories,
+  getProductBySlug,
+  orFallback,
+  type Product,
+} from "@/lib/catalog";
 
 const HERO_SLUG = "lovmee-30k-lov30";
 
@@ -43,7 +48,11 @@ const NEW_THIS_SEASON = [
   "suonon-donete-50k-disposable-vape",
 ];
 
-const TOP_CATEGORY_SLUGS = ["torches-lighters", "exotic-snacks", "disposable-vapes"];
+const TOP_CATEGORY_SLUGS = [
+  "torches-lighters",
+  "exotic-snacks",
+  "disposable-vapes",
+];
 
 const MID_BANNER_SLUG = "pyne-pod-click-kit-40k-puffs";
 
@@ -58,15 +67,30 @@ const TOP_PRODUCTS = [
 ];
 
 const TOP_BRANDS = [
-  { name: "Tre House", slug: "tre-house", logo: "/images/2025/11/Tre-house-rbg.png" },
-  { name: "Coastal Clouds", slug: "coastal-clouds", logo: "/images/2025/11/coastal-clouds-rbg.png" },
-  { name: "Ignitus", slug: "ignitus", logo: "/images/2025/04/Ignitus-Icon.jpg" },
+  {
+    name: "Tre House",
+    slug: "tre-house",
+    logo: "/images/2025/11/Tre-house-rbg.png",
+  },
+  {
+    name: "Coastal Clouds",
+    slug: "coastal-clouds",
+    logo: "/images/2025/11/coastal-clouds-rbg.png",
+  },
+  {
+    name: "Ignitus",
+    slug: "ignitus",
+    logo: "/images/2025/04/Ignitus-Icon.jpg",
+  },
   { name: "Nexa", slug: "nexa", logo: "/images/2025/03/nexa-png.png" },
   { name: "Geek Bar", slug: "geek-bar", logo: "/images/2025/03/geek-bar.png" },
 ];
 
 const RELIABLE_COMPANY_FEATURES = [
-  { label: "Authentic products", path: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" },
+  {
+    label: "Authentic products",
+    path: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+  },
   { label: "Speedy delivery service", path: "M13 10V3L4 14h7v7l9-11h-7z" },
   {
     label: "Lowest rates",
@@ -79,7 +103,10 @@ const RELIABLE_COMPANY_FEATURES = [
 ];
 
 async function resolveProducts(slugs: string[]): Promise<Product[]> {
-  const results = await orFallback(Promise.all(slugs.map(getProductBySlug)), []);
+  const results = await orFallback(
+    Promise.all(slugs.map(getProductBySlug)),
+    [],
+  );
   return results.filter((p): p is Product => Boolean(p));
 }
 
@@ -95,7 +122,15 @@ function Rail({ items }: { items: Product[] }) {
   );
 }
 
-function Heading({ label, title, href }: { label: string; title: string; href?: string }) {
+function Heading({
+  label,
+  title,
+  href,
+}: {
+  label: string;
+  title: string;
+  href?: string;
+}) {
   return (
     <div className="flex items-end justify-between gap-4">
       <div>
@@ -103,7 +138,10 @@ function Heading({ label, title, href }: { label: string; title: string; href?: 
         <h2 className="mt-2 text-3xl font-black">{title}</h2>
       </div>
       {href && (
-        <Link href={href} className="hidden text-sm font-semibold text-primary sm:block">
+        <Link
+          href={href}
+          className="hidden text-sm font-semibold text-primary sm:block"
+        >
           View all <ArrowRight className="inline size-4" />
         </Link>
       )}
@@ -159,65 +197,91 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Hero: text on the left, video on the right */}
-      <section className="page-shell grid items-center gap-10 py-12 sm:py-16 lg:grid-cols-2 lg:gap-14 lg:py-20">
-        <div>
-          <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase text-foreground/80">
-            <span className="size-2 rounded-full bg-primary" />
-            Gas station · convenience · smoke shop supply
-          </span>
-          <h1 className="mt-7 font-display text-5xl font-black leading-[.92] sm:text-7xl xl:text-8xl">
-            Wholesale,
-            <br />
-            <em className="text-primary">without</em> the wait.
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-7 text-muted-foreground">
-            Explore our catalogue of trusted products for independent retailers and build an enquiry in minutes.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/shop" className="btn btn-primary">
-              Browse catalogue <ArrowRight className="size-4" />
-            </Link>
-            <Link href="/enquiry" className="btn btn-secondary">
-              Build an enquiry
-            </Link>
-          </div>
-          <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
-            {[
-              { Icon: Truck, label: "Free delivery" },
-              { Icon: ShieldCheck, label: "Authentic products" },
-              { Icon: Store, label: "Family operated" },
-            ].map(({ Icon, label }) => (
-              <div key={label} className="border-l border-border pl-3">
-                <Icon className="size-5 text-primary" />
-                <p className="mt-2 text-xs font-semibold text-muted-foreground">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Hero: text on the left, video on the right, with the smoke video (same as the
+          "Prices that satisfy you" section below) playing full-bleed behind the whole section */}
+      <section className="relative overflow-hidden py-12 sm:py-16 lg:py-20">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src="/assets/videos/smoke.mp4" type="video/mp4" />
+        </video>
+        {/* Darkens only the text side so the copy stays readable; the video stays bright
+            and clear on the right, same as the rest of the site. */}
+        <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/35 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-background to-transparent" />
 
-        <div className="relative">
-          <div className="glass-strong overflow-hidden rounded-3xl p-2.5 shadow-2xl sm:p-3">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              className="aspect-[4/3] w-full rounded-2xl object-cover lg:aspect-[5/4]"
-            >
-              <source src="/assets/videos/Geek-Bar-Video.mp4" type="video/mp4" />
-            </video>
+        <div className="page-shell relative grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
+          <div>
+            <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-bold uppercase text-foreground/80">
+              <span className="size-2 rounded-full bg-primary" />
+              Gas station · convenience · smoke shop supply
+            </span>
+            <h1 className="mt-7 font-display text-5xl font-black leading-[.92] sm:text-7xl xl:text-8xl">
+              Wholesale,
+              <br />
+              <em className="text-primary">without</em> the wait.
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-7 text-muted-foreground">
+              Explore our catalogue of trusted products for independent
+              retailers and build an enquiry in minutes.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/shop" className="btn btn-primary">
+                Browse catalogue <ArrowRight className="size-4" />
+              </Link>
+              <Link href="/enquiry" className="btn btn-secondary">
+                Build an enquiry
+              </Link>
+            </div>
+            <div className="mt-10 grid max-w-xl grid-cols-3 gap-3">
+              {[
+                { Icon: Truck, label: "Free delivery" },
+                { Icon: ShieldCheck, label: "Authentic products" },
+                { Icon: Store, label: "Family operated" },
+              ].map(({ Icon, label }) => (
+                <div key={label} className="border-l border-border pl-3">
+                  <Icon className="size-5 text-primary" />
+                  <p className="mt-2 text-xs font-semibold text-muted-foreground">
+                    {label}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-          {heroProduct && (
-            <Link
-              href={`/product/${heroProduct.slug}`}
-              className="surface-dark absolute -bottom-4 left-4 rounded-xl p-4 transition hover:border-primary/50 sm:left-6"
-            >
-              <p className="section-label">Exclusive distributor</p>
-              <p className="mt-1 max-w-52 font-display font-bold">{heroProduct.name}</p>
-            </Link>
-          )}
+
+          <div className="relative">
+            <div className="glass-strong overflow-hidden rounded-3xl p-2.5 shadow-2xl sm:p-3">
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="aspect-[4/3] w-full rounded-2xl object-cover lg:aspect-[5/4]"
+              >
+                <source
+                  src="/assets/videos/Geek-Bar-Video.mp4"
+                  type="video/mp4"
+                />
+              </video>
+            </div>
+            {heroProduct && (
+              <Link
+                href={`/product/${heroProduct.slug}`}
+                className="surface-dark absolute -bottom-4 left-4 rounded-xl p-4 transition hover:border-primary/50 sm:left-6"
+              >
+                <p className="section-label">Exclusive distributor</p>
+                <p className="mt-1 max-w-52 font-display font-bold">
+                  {heroProduct.name}
+                </p>
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
@@ -244,7 +308,11 @@ export default async function Home() {
       {/* New Flavors: disposables */}
       {newFlavorsDisposables.length > 0 && (
         <section className="page-shell py-16">
-          <Heading label="Disposables" title="New flavors" href="/product-category/disposable-vapes" />
+          <Heading
+            label="Disposables"
+            title="New flavors"
+            href="/product-category/disposable-vapes"
+          />
           <Rail items={newFlavorsDisposables} />
         </section>
       )}
@@ -312,8 +380,13 @@ export default async function Home() {
             )}
             <div className="text-center lg:text-left">
               <p className="section-label">Featured line</p>
-              <h2 className="mt-2 text-3xl font-black sm:text-4xl">{midBannerProduct.name}</h2>
-              <Link href={`/product/${midBannerProduct.slug}`} className="btn btn-primary mt-6">
+              <h2 className="mt-2 text-3xl font-black sm:text-4xl">
+                {midBannerProduct.name}
+              </h2>
+              <Link
+                href={`/product/${midBannerProduct.slug}`}
+                className="btn btn-primary mt-6"
+              >
                 Shop now <ArrowRight className="size-4" />
               </Link>
             </div>
@@ -356,7 +429,13 @@ export default async function Home() {
                 className="rounded-xl border border-border bg-foreground/5 p-4 text-center transition hover:border-primary/50"
               >
                 <div className="relative mx-auto h-24 w-full max-w-40 rounded-lg bg-white">
-                  <Image src={b.logo} alt="" fill sizes="160px" className="object-contain p-2" />
+                  <Image
+                    src={b.logo}
+                    alt=""
+                    fill
+                    sizes="160px"
+                    className="object-contain p-2"
+                  />
                 </div>
                 <h3 className="mt-3 text-sm font-bold">{b.name}</h3>
               </Link>
@@ -380,22 +459,43 @@ export default async function Home() {
 
         <div className="page-shell relative">
           <div className="text-center">
-            <p className="section-label !text-white drop-shadow">Wholesale pricing</p>
-            <h2 className="mt-2 text-3xl font-black drop-shadow-lg">Prices that satisfy you</h2>
-            <p className="mt-3 font-medium text-white drop-shadow-md">Have a question about our service?</p>
+            <p className="section-label !text-white drop-shadow">
+              Wholesale pricing
+            </p>
+            <h2 className="mt-2 text-3xl font-black drop-shadow-lg">
+              Prices that satisfy you
+            </h2>
+            <p className="mt-3 font-medium text-white drop-shadow-md">
+              Have a question about our service?
+            </p>
             <Link href="/contact-us" className="btn btn-primary mt-6">
               Contact us
             </Link>
           </div>
 
           <div className="mx-auto mt-16 max-w-4xl border-t border-border pt-16 text-center">
-            <h2 className="text-3xl font-black drop-shadow-lg">Reliable company</h2>
+            <h2 className="text-3xl font-black drop-shadow-lg">
+              Reliable company
+            </h2>
             <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
               {RELIABLE_COMPANY_FEATURES.map((f) => (
-                <div key={f.label} className="flex flex-col border border-white/25 bg-white/15 backdrop-blur-sm items-center gap-3 rounded-xl p-5 text-center">
+                <div
+                  key={f.label}
+                  className="flex flex-col border border-white/25 bg-white/15 backdrop-blur-sm items-center gap-3 rounded-xl p-5 text-center"
+                >
                   <span className="grid size-12 place-items-center rounded-full bg-primary text-primary-foreground">
-                    <svg viewBox="0 0 24 24" className="size-6" fill="none" stroke="currentColor" strokeWidth={1.75}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d={f.path} />
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="size-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={1.75}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d={f.path}
+                      />
                     </svg>
                   </span>
                   <span className="text-sm font-semibold">{f.label}</span>
