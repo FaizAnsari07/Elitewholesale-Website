@@ -222,12 +222,12 @@ export default async function Home() {
       </section>
 
       {/* New Flavors: e-liquids */}
-      {newFlavorsEliquids.length > 0 && (
+      {/* {newFlavorsEliquids.length > 0 && (
         <section className="page-shell py-16">
           <Heading label="New bigger size" title="New flavors" />
           <Rail items={newFlavorsEliquids} />
         </section>
-      )}
+      )} */}
 
       {/* New Products */}
       {newProducts.length > 0 && (
