@@ -8,6 +8,12 @@ require __DIR__ . '/../lib/config.php';
 
 $pdo = db();
 
+// Same label the storefront shows for a flavor/option (joins its attribute values).
+function variation_label(array $node): string {
+    $values = array_filter(array_map(fn($a) => $a['value'], $node['attributes']['nodes']));
+    return $values ? implode(' / ', $values) : 'Standard';
+}
+
 function hydrate_product(PDO $pdo, array $row): array {
     $id = (int)$row['id'];
 
@@ -47,6 +53,8 @@ function hydrate_product(PDO $pdo, array $row): array {
                 'image' => $v['image_url'] ? ['sourceUrl' => $v['image_url']] : null,
             ];
         }
+        // Show flavors/options in alphabetical (A-Z) order on the product page.
+        usort($nodes, fn($a, $b) => strcasecmp(variation_label($a), variation_label($b)));
         $variations = ['nodes' => $nodes];
     }
 
