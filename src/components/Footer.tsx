@@ -116,6 +116,18 @@ export default function Footer() {
             <Link href="/privacy-policy" className="hover:text-foreground">Privacy Policy</Link>
           </div>
         </div>
+
+        <p className="mt-4 text-center text-xs text-muted-foreground">
+          Website by{" "}
+          <a
+            href="https://www.originsoftwares.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-sky-400 hover:text-sky-300"
+          >
+            Origin Software
+          </a>
+        </p>
       </div>
     </footer>
   );
