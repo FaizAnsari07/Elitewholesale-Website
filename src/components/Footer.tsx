@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ExternalLink, Mail, MapPin, Phone, Sparkles } from "lucide-react";
 import { Wordmark } from "@/components/HeaderClient";
 import { siteConfig } from "@/lib/site";
 
@@ -117,17 +117,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="mt-4 text-center text-xs text-muted-foreground">
-          Website by{" "}
+        <div className="mt-5 flex justify-center">
           <a
             href="https://www.originsoftwares.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-sky-400 hover:text-sky-300"
+            className="group inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-sky-400/10 px-4 py-2 text-xs shadow-[0_0_24px_-10px_rgba(56,189,248,0.9)] backdrop-blur transition duration-300 hover:-translate-y-0.5 hover:border-sky-400/70 hover:bg-sky-400/15 hover:shadow-[0_0_32px_-6px_rgba(56,189,248,0.9)]"
           >
-            Origin Software
+            <Sparkles className="size-3.5 text-sky-400 transition duration-300 group-hover:rotate-12 group-hover:text-sky-300" />
+            <span className="text-muted-foreground">Website by</span>
+            <span className="font-extrabold tracking-wide text-sky-400 transition group-hover:text-sky-300">
+              Origin Software
+            </span>
+            <ExternalLink className="size-3 text-sky-400/70 opacity-0 transition duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
           </a>
-        </p>
+        </div>
       </div>
     </footer>
   );
