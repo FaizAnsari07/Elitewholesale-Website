@@ -1,37 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FileSpreadsheet, FileText } from "lucide-react";
 import AdminHeader from "@/components/admin/AdminHeader";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import DeleteButton from "@/components/admin/DeleteButton";
 import { listProducts, type AdminProduct } from "@/lib/admin-api";
+import { applyShow, isActive, parseProductFilters, scopeProducts, type ProductShow } from "@/lib/admin-products-filter";
 import { deleteProductAction } from "@/app/admin/actions";
-
-type Show = "all" | "active" | "inactive";
 
 export default async function AdminProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; page?: string; category?: string; brand?: string; show?: string }>;
 }) {
-  const { q, page, category, brand, show: showParam } = await searchParams;
+  const { q: qParam, page, category, brand, show: showParam } = await searchParams;
   const currentPage = Math.max(1, Number(page) || 1);
-  const categoryId = Number(category) || undefined;
-  const brandId = Number(brand) || undefined;
-  const show: Show = showParam === "active" || showParam === "inactive" ? showParam : "all";
+  const { q, categoryId, brandId, show } = parseProductFilters({ q: qParam, category, brand, show: showParam });
 
   const all = await listProducts({ search: q });
 
   // Narrow to one category / brand when coming from those tables.
-  const scoped = all.filter(
-    (p) =>
-      (!categoryId || p.categories.some((c) => c.id === categoryId)) &&
-      (!brandId || p.brands.some((b) => b.id === brandId)),
-  );
-  const activeCount = scoped.filter((p) => p.stock_status === "instock").length;
+  const scoped = scopeProducts(all, { q, categoryId, brandId, show });
+  const activeCount = scoped.filter(isActive).length;
   const inactiveCount = scoped.length - activeCount;
-  const products = scoped.filter(
-    (p) => show === "all" || (show === "active" ? p.stock_status === "instock" : p.stock_status !== "instock"),
-  );
+  const products = applyShow(scoped, show);
 
   const scopeName = categoryId
     ? { kind: "Category", name: all.flatMap((p) => p.categories).find((c) => c.id === categoryId)?.name }
@@ -51,6 +43,16 @@ export default async function AdminProductsPage({
     for (const [k, v] of Object.entries(base)) if (v) params.set(k, v);
     const qs = params.toString();
     return qs ? `/admin/products?${qs}` : "/admin/products";
+  };
+
+  // Downloads use the same filters as the list, and include every page of results.
+  const exportHref = (format: "xlsx" | "pdf") => {
+    const params = new URLSearchParams({ format });
+    if (q) params.set("q", q);
+    if (categoryId) params.set("category", String(categoryId));
+    if (brandId) params.set("brand", String(brandId));
+    if (show !== "all") params.set("show", show);
+    return `/admin/products/export?${params.toString()}`;
   };
 
   const columns: DataTableColumn<AdminProduct>[] = [
@@ -124,7 +126,7 @@ export default async function AdminProductsPage({
     },
   ];
 
-  const tab = (value: Show, label: string, count: number) => (
+  const tab = (value: ProductShow, label: string, count: number) => (
     <Link
       key={value}
       href={hrefWith({ show: value === "all" ? undefined : value, page: undefined })}
@@ -168,15 +170,38 @@ export default async function AdminProductsPage({
               Search
             </button>
           </form>
-          <Link href="/admin/products/new" className="btn btn-primary">
-            + Add Product
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={exportHref("xlsx")}
+              download
+              title={`Download ${products.length} product${products.length === 1 ? "" : "s"} as an Excel sheet`}
+              className="btn btn-secondary"
+            >
+              <FileSpreadsheet className="size-4 text-success" />
+              Excel
+            </a>
+            <a
+              href={exportHref("pdf")}
+              download
+              title={`Download ${products.length} product${products.length === 1 ? "" : "s"} as a PDF`}
+              className="btn btn-secondary"
+            >
+              <FileText className="size-4 text-destructive" />
+              PDF
+            </a>
+            <Link href="/admin/products/new" className="btn btn-primary">
+              + Add Product
+            </Link>
+          </div>
         </div>
 
         <div className="mb-4 flex flex-wrap gap-2">
           {tab("all", "All", scoped.length)}
           {tab("active", "Active", activeCount)}
           {tab("inactive", "Inactive", inactiveCount)}
+          <span className="ml-auto self-center text-xs text-muted-foreground">
+            Excel / PDF download {products.length} product{products.length === 1 ? "" : "s"} (current filters)
+          </span>
         </div>
 
         <DataTable
